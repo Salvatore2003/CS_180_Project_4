@@ -6,10 +6,12 @@ public class User {
         this.password = password;
     }
 
+
     public String getUserName() {
         return userName;
     }
-//test
+
+
     public String getPassword() {
         return password;
     }
