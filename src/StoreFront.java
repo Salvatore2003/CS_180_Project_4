@@ -5,11 +5,9 @@ public class StoreFront {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         ArrayList<User> users = new ArrayList<>();
-        while (true) {
-            User newUser = createAccount(users, scan);
-            if (newUser != null) {
-                users.add(newUser);
-            }
+        boolean siteUp = true;
+            while (siteUp) {
+
         }
     }
 
