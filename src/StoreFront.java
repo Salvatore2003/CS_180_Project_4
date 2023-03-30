@@ -5,9 +5,26 @@ public class StoreFront {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         ArrayList<User> users = new ArrayList<>();
+        String userInput;
         boolean siteUp = true;
             while (siteUp) {
+                do {
+                    System.out.println("1) Create an account\n2) Sign in");
+                    userInput = scan.nextLine();
+                    if (!userInput.equals("1") && !userInput.equals("2")) {
+                        System.out.println("Please enter a valid input of 1 or 2");
+                    }
+                } while (!userInput.equals("1") && !userInput.equals("2"));
 
+                if (userInput.equals("1")) {
+                    User newUser = createAccount(users, scan);
+                    if (newUser != null) {
+                        users.add(newUser);
+                    } else {
+                        System.out.println("No user created");
+                    }
+
+                }
         }
     }
 
@@ -15,8 +32,6 @@ public class StoreFront {
         String newUserName = null;
         boolean validInput = false;
         boolean userName5Char = true;
-
-
         String password;
         while (!validInput) {
             System.out.println("Enter a username:");
