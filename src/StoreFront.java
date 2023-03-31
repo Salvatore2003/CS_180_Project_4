@@ -36,6 +36,7 @@ public class StoreFront {
         }
     }
 
+    //this is how the account is created
     public static User createAccount(ArrayList<User> users, Scanner scan) {
 
         String newUserName = null;
@@ -135,6 +136,7 @@ public class StoreFront {
         return null;
     }
 
+    //this is how the user logs in
     public static User login(ArrayList<User> users, Scanner scan) {
         String checkUsername;
         int indexOfUser = 0;
@@ -178,6 +180,7 @@ public class StoreFront {
         }
         return null;
     }
+    //this is the user interface
     public static void userInterface(Scanner scan, User user) {
         boolean signOut = false;
         int userInput;
@@ -216,4 +219,3 @@ public class StoreFront {
         }
     }
 }
-
