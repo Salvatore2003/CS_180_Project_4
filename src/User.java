@@ -1,6 +1,18 @@
 public class User {
     private String userName;
     private String password;
+    private String userEmail;
+    boolean buyer;
+    boolean seller;
+
+    public User(String userName, String password, String userEmail, boolean buyer, boolean seller) {
+        this.userName = userName;
+        this.password = password;
+        this.userEmail = userEmail;
+        this.buyer = buyer;
+        this.seller = seller;
+    }
+
     public User (String userName, String password) {
         this.userName = userName;
         this.password = password;
