@@ -297,5 +297,4 @@ public class StoreFront {
             System.out.println("File cannot be written to.");
         }
     }
-
 }
