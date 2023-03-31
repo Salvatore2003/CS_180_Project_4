@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -5,7 +6,11 @@ import java.util.Scanner;
 public class StoreFront {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        ArrayList<User> users = new ArrayList<>();
+        ArrayList<User> users;
+        users = recoverUsers();
+        if (users == null) {
+            users = new ArrayList<>();
+        }
         String userInput;
         User signedInUser;
         boolean siteUp = true;
@@ -16,24 +21,27 @@ public class StoreFront {
                 if (!userInput.equals("1") && !userInput.equals("2")) {
                     System.out.println("Please enter a valid input of 1 or 2");
                 }
-            } while (!userInput.equals("1") && !userInput.equals("2"));
+            } while (!userInput.equals("1") && !userInput.equals("2") && !userInput.equals("3"));
 
-            if (userInput.equals("1")) {
-                User newUser = createAccount(users, scan);
-                if (newUser != null) {
-                    users.add(newUser);
-                } else {
-                    System.out.println("No user created");
+            switch (userInput) {
+                case "1" -> {
+                    User newUser = createAccount(users, scan);
+                    if (newUser != null) {
+                        users.add(newUser);
+                    } else {
+                        System.out.println("No user created");
+                    }
                 }
-            }
-
-            if (userInput.equals("2")) {
-                signedInUser = login(users, scan);
-                if (signedInUser != null) {
-                    userInterface(scan, signedInUser);
+                case "2" -> {
+                    signedInUser = login(users, scan);
+                    if (signedInUser != null) {
+                        userInterface(scan, signedInUser);
+                    }
                 }
+                case "3" -> siteUp = false;
             }
         }
+        storeData(users);
     }
 
     //this is how the account is created
@@ -41,7 +49,6 @@ public class StoreFront {
 
         String newUserName = null;
         boolean validInput = false;
-        boolean userName5Char = true;
         String password = "";
         String userEmail = "";
 
@@ -51,15 +58,18 @@ public class StoreFront {
             if (newUserName.equals("exit")) {
                 System.out.println("Exiting...");
                 return null;
-            }
-            if (newUserName.length() < 5) {
-                userName5Char = false;
-            }
-            if (userName5Char) {
+            } else if (newUserName.length() < 5) {
+                System.out.println("Username must be at least 5 characters.");
+            } else if (newUserName.contains(" ")) {
+                System.out.println("No spaces are allowed in username.");
+            } else {
                 validInput = true;
+
                 for (int i = 0; i < users.size(); i++) {
+
                     if (users.get(i).getUserName().equals(newUserName)) {
-                        System.out.println("Username is taken. Try another or type exit to leave");
+
+                        System.out.println("Username is taken. Try another or type exit to leave.");
                         validInput = false;
                         break;
                     }
@@ -75,6 +85,8 @@ public class StoreFront {
                 return null;
             } else if (password.length() < 5) {
                 System.out.println("The password must be 5 character long. Try another or type exit to leave.");
+            } else if (password.contains(" ")) {
+                System.out.println("Do not use any spaces");
             } else {
                 validInput = true;
             }
@@ -82,31 +94,36 @@ public class StoreFront {
         validInput = false;
         System.out.println("Enter your email");
         while (!validInput) {
-            try {
-                int userResponse;
-                userEmail = scan.nextLine();
-                System.out.println("Verify Email: (Enter 1, 2, or 3)");
-                System.out.println("1) Confirm Email");
-                System.out.println("2) Change Email");
-                System.out.println("3) Exit");
-                userResponse = scan.nextInt();
-                scan.nextLine();
-                switch (userResponse) {
-                    case 1:
-                        System.out.println("Email verified!");
-                        validInput = true;
-                        break;
-                    case 2:
-                        System.out.println("Enter a different email.");
-                        break;
-                    case 3:
-                        System.out.println("Exiting...");
-                        return null;
-                    default:
-                        throw new InputMismatchException();
+
+
+            int userResponse;
+            userEmail = scan.nextLine();
+            if (userEmail.contains(" ")) {
+                System.out.println("Email cannot contain spaces");
+            } else {
+                try {
+                    System.out.println("Verify Email: (Enter 1, 2, or 3)");
+                    System.out.println("1) Confirm Email");
+                    System.out.println("2) Change Email");
+                    System.out.println("3) Exit");
+                    userResponse = scan.nextInt();
+                    scan.nextLine();
+                    switch (userResponse) {
+                        case 1 -> {
+                            System.out.println("Email verified!");
+                            validInput = true;
+                        }
+                        case 2 -> System.out.println("Enter a different email.");
+                        case 3 -> {
+                            System.out.println("Exiting...");
+                            return null;
+                        }
+                        default -> throw new InputMismatchException();
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Please enter 1, 2, or 3.");
                 }
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter 1, 2, or 3.");
+
             }
         }
         validInput = false;
@@ -115,19 +132,21 @@ public class StoreFront {
                 System.out.println("Are you a seller or buyer?");
                 System.out.println("1) Buyer");
                 System.out.println("2) Seller");
-                System.out.println("3) exit");
+                System.out.println("3) Exit");
                 int userInput = scan.nextInt();
                 scan.nextLine();
                 switch (userInput) {
-                    case 1:
+                    case 1 -> {
                         return new User(newUserName, password, userEmail, true, false);
-                    case 2:
+                    }
+                    case 2 -> {
                         return new User(newUserName, password, userEmail, false, true);
-                    case 3:
+                    }
+                    case 3 -> {
                         System.out.println("Exiting...");
                         return null;
-                    default:
-                        throw new InputMismatchException();
+                    }
+                    default -> throw new InputMismatchException();
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Please enter 1, 2, or 3.");
@@ -149,6 +168,9 @@ public class StoreFront {
                 return null;
             }
             try {
+                if (users.size() == 0) {
+                    throw new InvalidLogin("Invalid login. Try entering your username again or type exit to leave.");
+                }
                 for (int i = 0; i < users.size(); i++) {
                     if (users.get(i).getUserName().equals(checkUsername)) {
                         validUsername = true;
@@ -180,6 +202,7 @@ public class StoreFront {
         }
         return null;
     }
+
     //this is the user interface
     public static void userInterface(Scanner scan, User user) {
         boolean signOut = false;
@@ -208,6 +231,7 @@ public class StoreFront {
                         //implement settings
                         break;
                     case 5:
+                        System.out.println("Logging out...");
                         signOut = true;
                         break;
                     default:
@@ -218,4 +242,60 @@ public class StoreFront {
             }
         }
     }
+
+    public static ArrayList<User> recoverUsers() {
+        String line;
+        String userName;
+        String password;
+        String email;
+        boolean isBuyer;
+        boolean isSeller;
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            FileReader fr = new FileReader("userInfo.txt");
+            BufferedReader bfr = new BufferedReader(fr);
+            line = bfr.readLine();
+            while (line != null) {
+                userName = line.substring(0, line.indexOf(" "));
+                line = line.substring(line.indexOf(" ") + 1);
+                password = line.substring(0, line.indexOf(" "));
+                line = (line.substring(line.indexOf(" ") + 1));
+                email = line.substring(0, line.indexOf(" "));
+                line = (line.substring(line.indexOf(" ") + 1));
+                isBuyer = Boolean.parseBoolean(line.substring(0, line.indexOf(" ")));
+
+                line = line.substring(0, line.indexOf(" ") + 1);
+
+                isSeller = Boolean.parseBoolean(line);
+
+                users.add(new User(userName, password, email, isBuyer, isSeller));
+                line = bfr.readLine();
+            }
+            return users;
+        } catch (FileNotFoundException e) {
+            System.out.println("No file found.");
+
+        } catch (Exception e) {
+            System.out.println("Error reading the user info file.");
+
+        }
+        return null;
+    }
+
+
+    public static void storeData(ArrayList<User> users) {
+        try {
+            FileWriter fw = new FileWriter("userInfo.txt");
+            BufferedWriter bfw = new BufferedWriter(fw);
+            for (User user : users) {
+                bfw.write(user.getUserName() + " " + user.getPassword() + " " +
+                        user.getUserEmail() + " " + user.isBuyer() + " " +
+                        user.isSeller() + "\n");
+            }
+            bfw.close();
+        } catch (IOException e) {
+            System.out.println("File cannot be written to.");
+        }
+    }
+
 }

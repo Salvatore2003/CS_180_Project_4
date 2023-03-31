@@ -23,9 +23,18 @@ public class User {
         return userName;
     }
 
-
     public String getPassword() {
         return password;
+    }
+    public String getUserEmail() {
+        return userEmail;
+    }
+    public boolean isBuyer() {
+        return buyer;
+    }
+
+    public boolean isSeller() {
+        return seller;
     }
 
     public boolean checkPassword (User testUser) throws InvalidLogin {
