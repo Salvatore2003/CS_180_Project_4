@@ -59,9 +59,9 @@ public class StoreFront {
                 System.out.println("Exiting...");
                 return null;
             } else if (newUserName.length() < 5) {
-                System.out.println("Username must be at least 5 characters.");
+                System.out.println("Username must be at least 5 characters. Try another or type exit to leave.");
             } else if (newUserName.contains(" ")) {
-                System.out.println("No spaces are allowed in username.");
+                System.out.println("No spaces are allowed in username. Try another or type exit to leave.");
             } else {
                 validInput = true;
 

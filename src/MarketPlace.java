@@ -25,8 +25,8 @@ public class MarketPlace {
                 System.out.println("2) Create Store");
                 System.out.println("3) View Sales");
                 System.out.println("4) Exit");
-                scan.nextLine();
                 userInput = scan.nextInt();
+
                 scan.nextLine();
                 if (userInput == 1) {
                     System.out.println("execute 1");
@@ -37,12 +37,13 @@ public class MarketPlace {
                 } else if (userInput == 4) {
                     System.out.println("execute 4");
                 } else {
-                    throw new InputMismatchException();
+                    throw new InvalidNumber("Please enter 1, 2, 3, or 4");
                 }
-
+            }catch (InvalidNumber e) {
+                System.out.println(e.getMessage());
             } catch (InputMismatchException e) {
                 System.out.println("Please enter 1, 2, 3, or 4");
-
+                scan.nextLine();
             }
 
         } while (!(userInput == 4));
