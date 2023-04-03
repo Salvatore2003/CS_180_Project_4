@@ -38,8 +38,7 @@ public class User {
     }
 
     public boolean checkPassword (User testUser) throws InvalidLogin {
-        if (testUser instanceof User &&
-                userName.equals(testUser.getUserName()) && password.equals(testUser.getPassword())) {
+        if (userName.equals(testUser.getUserName()) && password.equals(testUser.getPassword())) {
             return true;
         }
         throw new InvalidLogin("Username or Password is Incorrect");

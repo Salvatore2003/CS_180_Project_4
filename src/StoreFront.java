@@ -225,7 +225,9 @@ public class StoreFront {
                         //implement run message
                         break;
                     case 3:
-                        //implement run marketplace
+                        MarketPlace marketPlace = new MarketPlace(user.getUserName(),
+                                user.getUserEmail(), scan);
+                        marketPlace.runSeller();
                         break;
                     case 4:
                         //implement settings
