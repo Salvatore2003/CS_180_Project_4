@@ -1,10 +1,3 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -51,25 +44,8 @@ public class UserSettings {
 
     public void setUsername(Scanner scan) {
         boolean validInput = false;
-        String line;
-        int lines;
+
         String newUsername;
-        try {
-            File f = new File("userInfo.txt");
-            if (f.exists()) {
-                FileReader fr = new FileReader("userInfo.txt");
-                Path path = Paths.get("userInfo.txt");
-                lines = (int) Files.lines(path).count();
-                String[] currentUserNames = new String[lines];
-                BufferedReader bfr = new BufferedReader(fr);
-                line = bfr.readLine();
-                for (int i = 0; i < lines; i++) {
-                    currentUserNames[i] = line.substring(0, line.indexOf(" "));
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         do {
             System.out.println("Enter your new desired username or exit to leave.");
             newUsername = scan.nextLine();
