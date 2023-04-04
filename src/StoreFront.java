@@ -35,7 +35,7 @@ public class StoreFront {
                 case "2" -> {
                     signedInUser = login(users, scan);
                     if (signedInUser != null) {
-                        userInterface(scan, signedInUser);
+                        userInterface(scan, signedInUser, users);
                     }
                 }
                 case "3" -> siteUp = false;
@@ -161,10 +161,11 @@ public class StoreFront {
         int indexOfUser = 0;
         boolean validUsername = false;
         boolean validPassword = false;
-        System.out.println("Enter your username.");
+        System.out.println("Enter your username or exit to leave.");
         while (!validUsername) {
             checkUsername = scan.nextLine();
             if (checkUsername.equals("exit")) {
+                System.out.println("Exiting...");
                 return null;
             }
             try {
@@ -204,11 +205,11 @@ public class StoreFront {
     }
 
     //this is the user interface
-    public static void userInterface(Scanner scan, User user) {
+    public static void userInterface(Scanner scan, User user, ArrayList<User> users) {
         boolean signOut = false;
         int userInput;
         while (!signOut) {
-            System.out.println("Enter the number to access your desire feature Features:");
+            System.out.println("Enter the number to access your desire feature: ");
             System.out.println("1) Calendar");
             System.out.println("2) Messages");
             System.out.println("3) Marketplace");
@@ -225,12 +226,11 @@ public class StoreFront {
                         //implement run message
                         break;
                     case 3:
-                        MarketPlace marketPlace = new MarketPlace(user.getUserName(),
-                                user.getUserEmail(), scan);
-                        marketPlace.runSeller();
+
                         break;
                     case 4:
-                        //implement settings
+                        UserSettings userSettings = new UserSettings(user, users);
+                        userSettings.runUserSettings(scan);
                         break;
                     case 5:
                         System.out.println("Logging out...");

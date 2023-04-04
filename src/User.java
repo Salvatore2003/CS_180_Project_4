@@ -23,6 +23,26 @@ public class User {
         return userName;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setBuyer(boolean buyer) {
+        this.buyer = buyer;
+    }
+
+    public void setSeller(boolean seller) {
+        this.seller = seller;
+    }
+
     public String getPassword() {
         return password;
     }
