@@ -5,15 +5,15 @@ import java.util.Scanner;
 
 public class StoreFront {
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        ArrayList<User> users;
+        Scanner scan = new Scanner(System.in); //scanner object for the input
+        ArrayList<User> users; //the users that are stored
         users = recoverUsers();
         if (users == null) {
             users = new ArrayList<>();
         }
-        String userInput;
-        User signedInUser;
-        boolean siteUp = true;
+        String userInput; //the users input
+        User signedInUser; //the user that is signe in
+        boolean siteUp = true; //if the site us currently up
         while (siteUp) {
             do {
                 System.out.println("1) Create an account\n2) Sign in");
@@ -44,7 +44,6 @@ public class StoreFront {
         storeData(users);
     }
 
-    //this is how the account is created
 
     /**
      * creates a new account for the users
@@ -54,10 +53,10 @@ public class StoreFront {
      */
     public static User createAccount(ArrayList<User> users, Scanner scan) {
 
-        String newUserName = null;
-        boolean validInput = false;
-        String password = "";
-        String userEmail = "";
+        String newUserName = null; //the new username that is getting checked
+        boolean validInput = false; //if there is a valid input
+        String password = ""; //the users password
+        String userEmail = ""; //the users email
 
         while (!validInput) {
             System.out.println("Enter a username:");
@@ -102,8 +101,7 @@ public class StoreFront {
         System.out.println("Enter your email");
         while (!validInput) {
 
-
-            int userResponse;
+            int userResponse; //if the user wants to confirm they email they selected
             userEmail = scan.nextLine();
             if (userEmail.contains(" ")) {
                 System.out.println("Email cannot contain spaces");
@@ -140,7 +138,7 @@ public class StoreFront {
                 System.out.println("1) Buyer");
                 System.out.println("2) Seller");
                 System.out.println("3) Exit");
-                int userInput = scan.nextInt();
+                int userInput = scan.nextInt(); //if the user wants to be a buyer or seller. They can also exit
                 scan.nextLine();
                 switch (userInput) {
                     case 1 -> {
@@ -170,10 +168,10 @@ public class StoreFront {
      */
     //this is how the user logs in
     public static User login(ArrayList<User> users, Scanner scan) {
-        String checkUsername;
-        int indexOfUser = 0;
-        boolean validUsername = false;
-        boolean validPassword = false;
+        String checkUsername; //the username being compared to make sure there are no repeats
+        int indexOfUser = 0; //what the index of the user is
+        boolean validUsername = false; //if the username is valid
+        boolean validPassword = false; //if there is a valid input
         System.out.println("Enter your username or exit to leave.");
         while (!validUsername) {
             checkUsername = scan.nextLine();
@@ -224,8 +222,8 @@ public class StoreFront {
      * @param users a list of all other users
      */
     public static void userInterface(Scanner scan, User user, ArrayList<User> users) {
-        boolean signOut = false;
-        int userInput;
+        boolean signOut = false; //if the user has signed out
+        int userInput; //the users input
         while (!signOut) {
             System.out.println("Enter the number to access your desire feature: ");
             System.out.println("1) Messages");
@@ -260,12 +258,12 @@ public class StoreFront {
      * @return the list of users that is stored
      */
     public static ArrayList<User> recoverUsers() {
-        String line;
-        String userName;
-        String password;
-        String email;
-        boolean isBuyer;
-        boolean isSeller;
+        String line; //the line that is read
+        String userName; //users username to be stored
+        String password; //users passwords to be stored
+        String email; //users email to be stored
+        boolean isBuyer; //checks if user is a buyer
+        boolean isSeller; //checks if the user is a seller
         ArrayList<User> users = new ArrayList<>();
         try {
             FileReader fr = new FileReader("userInfo.txt");
@@ -305,8 +303,8 @@ public class StoreFront {
 
     public static void storeData(ArrayList<User> users) {
         try {
-            FileWriter fw = new FileWriter("userInfo.txt");
-            BufferedWriter bfw = new BufferedWriter(fw);
+            FileWriter fw = new FileWriter("userInfo.txt"); //file writer to write the  file
+            BufferedWriter bfw = new BufferedWriter(fw); //buffer reader to read the file
             for (User user : users) {
                 bfw.write(user.getUserName() + " " + user.getPassword() + " " +
                         user.getUserEmail() + " " + user.isBuyer() + " " +

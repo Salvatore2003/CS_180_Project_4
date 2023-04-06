@@ -15,7 +15,7 @@ public class UserSettings {
      * @param scan Scanner object to take an input
      */
     public void runUserSettings(Scanner scan) {
-        String userInput = "";
+        String userInput = ""; //the users input
         do {
             System.out.println("Enter a number to change your account info:");
             System.out.println("1) Username");
@@ -52,9 +52,9 @@ public class UserSettings {
      */
 
     public void setUsername(Scanner scan) {
-        boolean validInput = false;
+        boolean validInput = false; //checks to see if the input is valid
 
-        String newUsername;
+        String newUsername; //the users new username
         do {
             System.out.println("Enter your new desired username or exit to leave.");
             newUsername = scan.nextLine();
@@ -91,8 +91,8 @@ public class UserSettings {
      * @param scan Scanner object to take an input
      */
     public void setPassword(Scanner scan) {
-        String newPassword;
-        boolean validInput = false;
+        String newPassword; //the users new password
+        boolean validInput = false; //checks to make sure there is a valid input
         do {
             System.out.println("Enter your new password or exit to leave");
             newPassword = scan.nextLine();
@@ -117,8 +117,8 @@ public class UserSettings {
      * @param scan Scanner object to take an input
      */
     public void setEmail(Scanner scan) {
-        String newEmail;
-        boolean validInput = false;
+        String newEmail; //the users new username
+        boolean validInput = false; //checks to make sure there is a valid input
         do {
             System.out.println("Enter your new email");
             newEmail = scan.nextLine();
@@ -138,8 +138,8 @@ public class UserSettings {
      * @param scan Scanner object to take an input
      */
     public void changeBuyerOrSeller(Scanner scan) {
-        String changeRole;
-        boolean validInput = false;
+        String changeRole; //checks if the user enters Y or N to change role
+        boolean validInput = false; //checks to make sure there is a valid input
         do {
             if (user.isBuyer()) {
                 System.out.println("Would you like to change to being a seller? Enter Y or N.");
