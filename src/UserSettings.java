@@ -10,6 +10,10 @@ public class UserSettings {
         this.users = users;
     }
 
+    /**
+     * allows the user to choose what to change
+     * @param scan Scanner object to take an input
+     */
     public void runUserSettings(Scanner scan) {
         String userInput = "";
         do {
@@ -41,6 +45,11 @@ public class UserSettings {
             }
         } while (!userInput.equals("5"));
     }
+
+    /**
+     * lets the user set a new username
+     * @param scan Scanner object to take an input
+     */
 
     public void setUsername(Scanner scan) {
         boolean validInput = false;
@@ -77,6 +86,10 @@ public class UserSettings {
         } while (!validInput);
     }
 
+    /**
+     * lets user set a new password
+     * @param scan Scanner object to take an input
+     */
     public void setPassword(Scanner scan) {
         String newPassword;
         boolean validInput = false;
@@ -99,6 +112,10 @@ public class UserSettings {
         } while (!validInput);
     }
 
+    /**
+     * makes a new email for the user
+     * @param scan Scanner object to take an input
+     */
     public void setEmail(Scanner scan) {
         String newEmail;
         boolean validInput = false;
@@ -116,6 +133,10 @@ public class UserSettings {
         } while (!validInput);
     }
 
+    /**
+     * change if the user is a buyer or a seller
+     * @param scan Scanner object to take an input
+     */
     public void changeBuyerOrSeller(Scanner scan) {
         String changeRole;
         boolean validInput = false;

@@ -45,6 +45,13 @@ public class StoreFront {
     }
 
     //this is how the account is created
+
+    /**
+     * creates a new account for the users
+     * @param users a list of the current users
+     * @param scan a scanner object to take inputs
+     * @return the account that is created
+     */
     public static User createAccount(ArrayList<User> users, Scanner scan) {
 
         String newUserName = null;
@@ -155,6 +162,12 @@ public class StoreFront {
         return null;
     }
 
+    /**
+     * logs in the user
+     * @param users a list of current users
+     * @param scan a Scanner object to take inputs
+     * @return the user that is logged in
+     */
     //this is how the user logs in
     public static User login(ArrayList<User> users, Scanner scan) {
         String checkUsername;
@@ -204,35 +217,32 @@ public class StoreFront {
         return null;
     }
 
-    //this is the user interface
+    /**
+     * the interface for when the user logs in
+     * @param scan the Scanner object to take inputs
+     * @param user the user that is logged in
+     * @param users a list of all other users
+     */
     public static void userInterface(Scanner scan, User user, ArrayList<User> users) {
         boolean signOut = false;
         int userInput;
         while (!signOut) {
             System.out.println("Enter the number to access your desire feature: ");
-            System.out.println("1) Calendar");
-            System.out.println("2) Messages");
-            System.out.println("3) Marketplace");
-            System.out.println("4) Settings");
-            System.out.println("5) Logout");
+            System.out.println("1) Messages");
+            System.out.println("2) Settings");
+            System.out.println("3) Logout");
             try {
                 userInput = scan.nextInt();
                 scan.nextLine();
                 switch (userInput) {
                     case 1:
                         //implement run calendar
-                        break;
-                    case 2:
-                        //implement run message
-                        break;
-                    case 3:
 
-                        break;
-                    case 4:
+                    case 2:
                         UserSettings userSettings = new UserSettings(user, users);
                         userSettings.runUserSettings(scan);
                         break;
-                    case 5:
+                    case 3:
                         System.out.println("Logging out...");
                         signOut = true;
                         break;
@@ -245,6 +255,10 @@ public class StoreFront {
         }
     }
 
+    /**
+     * recovers the users from previous times the code was ran
+     * @return the list of users that is stored
+     */
     public static ArrayList<User> recoverUsers() {
         String line;
         String userName;
@@ -284,6 +298,10 @@ public class StoreFront {
         return null;
     }
 
+    /**
+     * stores the users so that they can be used again next time the site is up
+     * @param users the users that are previously used
+     */
 
     public static void storeData(ArrayList<User> users) {
         try {
