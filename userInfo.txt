@@ -1,2 +1,1 @@
-bryce epics blamarca true false
-bryce_l password bslamarca@gmail true false
+admin epics bslamarca false false

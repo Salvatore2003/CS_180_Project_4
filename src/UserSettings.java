@@ -10,42 +10,84 @@ public class UserSettings {
         this.users = users;
     }
 
-    public void runUserSettings(Scanner scan) {
-        String userInput = "";
-        do {
-            System.out.println("Enter a number to change your account info:");
-            System.out.println("1) Username");
-            System.out.println("2) Password");
-            System.out.println("3) Email");
-            System.out.println("4) Edit Buyer or Seller");
-            System.out.println("5) Exit");
-            userInput = scan.nextLine();
-            switch (userInput) {
-                case "1":
-                    setUsername(scan);
-                    break;
-                case "2":
-                    setPassword(scan);
-                    break;
-                case "3":
-                    setEmail(scan);
-                    break;
-                case "4":
-                    changeBuyerOrSeller(scan);
-                    break;
-                case "5":
-                    System.out.println("Exiting...");
-                    break;
-                default:
-                    System.out.println("Please enter 1, 2, 3, 4, or 5");
-            }
-        } while (!userInput.equals("5"));
+    public UserSettings(User user) {
+        this.user = user;
     }
 
-    public void setUsername(Scanner scan) {
-        boolean validInput = false;
+    /**
+     * allows the user to choose what to change
+     *
+     * @param scan Scanner object to take an input
+     */
+    public void runUserSettings(Scanner scan) {
+        String userInput = ""; //the users input
+        boolean deletedAccount = false;
+        if (!user.equals("admin")) {
+            do {
+                System.out.println("Enter a number to change your account info:");
+                System.out.println("1) Username");
+                System.out.println("2) Password");
+                System.out.println("3) Email");
+                System.out.println("4) Edit Buyer or Seller");
+                System.out.println("5) Delete Account");
+                System.out.println("5) Exit");
+                userInput = scan.nextLine();
+                switch (userInput) {
+                    case "1":
+                        setUsername(scan);
+                        break;
+                    case "2":
+                        setPassword(scan);
+                        break;
+                    case "3":
+                        setEmail(scan);
+                        break;
+                    case "4":
+                        changeBuyerOrSeller(scan);
+                        break;
+                    case "5":
+                        deletedAccount = deleteAccount(scan);
+                    case "6":
+                        System.out.println("Exiting...");
+                        break;
+                    default:
+                        System.out.println("Please enter 1, 2, 3, 4, or 5");
+                }
+            } while (!userInput.equals("5") || !userInput.equals("6"));
+        } else {
+            do {
+                System.out.println("Enter a number to change your account info:");
+                System.out.println("1) Password");
+                System.out.println("2) Email");
+                System.out.println("3) Exit");
+                userInput = scan.nextLine();
+                switch (userInput) {
+                    case "1":
+                        setPassword(scan);
+                        break;
+                    case "2":
+                        setEmail(scan);
+                        break;
+                    case "3":
+                        System.out.println("Exiting...");
+                        break;
+                    default:
+                        System.out.println("Please enter 1, 2, or 3");
+                }
+            } while (!userInput.equals("5"));
+        }
+    }
 
-        String newUsername;
+    /**
+     * lets the user set a new username
+     *
+     * @param scan Scanner object to take an input
+     */
+
+    public void setUsername(Scanner scan) {
+        boolean validInput = false; //checks to see if the input is valid
+
+        String newUsername; //the users new username
         do {
             System.out.println("Enter your new desired username or exit to leave.");
             newUsername = scan.nextLine();
@@ -77,9 +119,14 @@ public class UserSettings {
         } while (!validInput);
     }
 
+    /**
+     * lets user set a new password
+     *
+     * @param scan Scanner object to take an input
+     */
     public void setPassword(Scanner scan) {
-        String newPassword;
-        boolean validInput = false;
+        String newPassword; //the users new password
+        boolean validInput = false; //checks to make sure there is a valid input
         do {
             System.out.println("Enter your new password or exit to leave");
             newPassword = scan.nextLine();
@@ -99,9 +146,14 @@ public class UserSettings {
         } while (!validInput);
     }
 
+    /**
+     * makes a new email for the user
+     *
+     * @param scan Scanner object to take an input
+     */
     public void setEmail(Scanner scan) {
-        String newEmail;
-        boolean validInput = false;
+        String newEmail; //the users new username
+        boolean validInput = false; //checks to make sure there is a valid input
         do {
             System.out.println("Enter your new email");
             newEmail = scan.nextLine();
@@ -116,9 +168,14 @@ public class UserSettings {
         } while (!validInput);
     }
 
+    /**
+     * change if the user is a buyer or a seller
+     *
+     * @param scan Scanner object to take an input
+     */
     public void changeBuyerOrSeller(Scanner scan) {
-        String changeRole;
-        boolean validInput = false;
+        String changeRole; //checks if the user enters Y or N to change role
+        boolean validInput = false; //checks to make sure there is a valid input
         do {
             if (user.isBuyer()) {
                 System.out.println("Would you like to change to being a seller? Enter Y or N.");
@@ -147,5 +204,27 @@ public class UserSettings {
                 }
             }
         } while (!validInput);
+    }
+
+    /** deletes a user account
+     * @param scan a scanner object to take the input of an objects
+     */
+    public boolean deleteAccount(Scanner scan) {
+        String userInput; //the users input
+        System.out.println("Confirm you want to delete your account");
+        System.out.println("1) Confirm");
+        System.out.println("2) Cancel");
+        userInput = scan.nextLine();
+        if (userInput.equals("1")) {
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getUserName().equals(user.getUserName())) {
+                    System.out.println("Deleting account...");
+                    users.remove(i);
+                    return true;
+                }
+            }
+        }
+        System.out.println("Cancelling...");
+        return false;
     }
 }
