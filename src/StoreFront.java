@@ -9,7 +9,7 @@ public class StoreFront {
         ArrayList<User> users; //the users that are stored
         users = recoverUsers();
         int adminReturn;
-        if (users.size() == 0) {
+        if (users == null || users.size() == 0) {
             users = new ArrayList<>();
             users.add(createAdmin(scan));
         }
