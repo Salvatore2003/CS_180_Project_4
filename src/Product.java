@@ -5,7 +5,7 @@ public class Product {
     int quantityAvailable;
     double price;
     int quantitySold;
-
+    //change
     public Product(String productName, String storeName, String description, int quantityAvailable, double price){
         this.productName = productName;
         this.storeName = storeName;
