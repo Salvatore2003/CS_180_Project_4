@@ -5,15 +5,18 @@ import java.util.Scanner;
 
 public class StoreFront {
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        ArrayList<User> users;
+        Scanner scan = new Scanner(System.in); //scanner object for the input
+        ArrayList<User> users; //the users that are stored
         users = recoverUsers();
-        if (users == null) {
+        int adminReturn;
+        if (users.size() == 0) {
             users = new ArrayList<>();
+            users.add(createAdmin(scan));
         }
-        String userInput;
-        User signedInUser;
-        boolean siteUp = true;
+
+        String userInput; //the users input
+        User signedInUser; //the user that is signe in
+        boolean siteUp = true; //if the site us currently up
         while (siteUp) {
             do {
                 System.out.println("1) Create an account\n2) Sign in");
@@ -34,23 +37,34 @@ public class StoreFront {
                 }
                 case "2" -> {
                     signedInUser = login(users, scan);
-                    if (signedInUser != null) {
+                    if (signedInUser != null && !signedInUser.getUserName().equals("admin")) {
                         userInterface(scan, signedInUser, users);
+                    } else if (signedInUser != null && signedInUser.equals("admin")){
+                        adminReturn = adminInterface(signedInUser, scan);
+                        if (adminReturn == 1) {
+                            siteUp = false;
+                        }
                     }
                 }
-                case "3" -> siteUp = false;
             }
         }
         storeData(users);
     }
 
-    //this is how the account is created
+
+    /**
+     * creates a new account for the users
+     *
+     * @param users a list of the current users
+     * @param scan  a scanner object to take inputs
+     * @return the account that is created
+     */
     public static User createAccount(ArrayList<User> users, Scanner scan) {
 
-        String newUserName = null;
-        boolean validInput = false;
-        String password = "";
-        String userEmail = "";
+        String newUserName = null; //the new username that is getting checked
+        boolean validInput = false; //if there is a valid input
+        String password = ""; //the users password
+        String userEmail = ""; //the users email
 
         while (!validInput) {
             System.out.println("Enter a username:");
@@ -95,8 +109,7 @@ public class StoreFront {
         System.out.println("Enter your email");
         while (!validInput) {
 
-
-            int userResponse;
+            int userResponse; //if the user wants to confirm they email they selected
             userEmail = scan.nextLine();
             if (userEmail.contains(" ")) {
                 System.out.println("Email cannot contain spaces");
@@ -133,7 +146,7 @@ public class StoreFront {
                 System.out.println("1) Buyer");
                 System.out.println("2) Seller");
                 System.out.println("3) Exit");
-                int userInput = scan.nextInt();
+                int userInput = scan.nextInt(); //if the user wants to be a buyer or seller. They can also exit
                 scan.nextLine();
                 switch (userInput) {
                     case 1 -> {
@@ -155,12 +168,19 @@ public class StoreFront {
         return null;
     }
 
+    /**
+     * logs in the user
+     *
+     * @param users a list of current users
+     * @param scan  a Scanner object to take inputs
+     * @return the user that is logged in
+     */
     //this is how the user logs in
     public static User login(ArrayList<User> users, Scanner scan) {
-        String checkUsername;
-        int indexOfUser = 0;
-        boolean validUsername = false;
-        boolean validPassword = false;
+        String checkUsername; //the username being compared to make sure there are no repeats
+        int indexOfUser = 0; //what the index of the user is
+        boolean validUsername = false; //if the username is valid
+        boolean validPassword = false; //if there is a valid input
         System.out.println("Enter your username or exit to leave.");
         while (!validUsername) {
             checkUsername = scan.nextLine();
@@ -204,35 +224,33 @@ public class StoreFront {
         return null;
     }
 
-    //this is the user interface
+    /**
+     * the interface for when the user logs in
+     *
+     * @param scan  the Scanner object to take inputs
+     * @param user  the user that is logged in
+     * @param users a list of all other users
+     */
     public static void userInterface(Scanner scan, User user, ArrayList<User> users) {
-        boolean signOut = false;
-        int userInput;
+        boolean signOut = false; //if the user has signed out
+        int userInput; //the users input
         while (!signOut) {
             System.out.println("Enter the number to access your desire feature: ");
-            System.out.println("1) Calendar");
-            System.out.println("2) Messages");
-            System.out.println("3) Marketplace");
-            System.out.println("4) Settings");
-            System.out.println("5) Logout");
+            System.out.println("1) Messages");
+            System.out.println("2) Settings");
+            System.out.println("3) Logout");
             try {
                 userInput = scan.nextInt();
                 scan.nextLine();
                 switch (userInput) {
                     case 1:
                         //implement run calendar
-                        break;
-                    case 2:
-                        //implement run message
-                        break;
-                    case 3:
 
-                        break;
-                    case 4:
+                    case 2:
                         UserSettings userSettings = new UserSettings(user, users);
                         userSettings.runUserSettings(scan);
                         break;
-                    case 5:
+                    case 3:
                         System.out.println("Logging out...");
                         signOut = true;
                         break;
@@ -245,13 +263,18 @@ public class StoreFront {
         }
     }
 
+    /**
+     * recovers the users from previous times the code was run
+     *
+     * @return the list of users that is stored
+     */
     public static ArrayList<User> recoverUsers() {
-        String line;
-        String userName;
-        String password;
-        String email;
-        boolean isBuyer;
-        boolean isSeller;
+        String line; //the line that is read
+        String userName; //users username to be stored
+        String password; //users passwords to be stored
+        String email; //users email to be stored
+        boolean isBuyer; //checks if user is a buyer
+        boolean isSeller; //checks if the user is a seller
         ArrayList<User> users = new ArrayList<>();
         try {
             FileReader fr = new FileReader("userInfo.txt");
@@ -284,11 +307,16 @@ public class StoreFront {
         return null;
     }
 
+    /**
+     * stores the users so that they can be used again next time the site is up
+     *
+     * @param users the users that are previously used
+     */
 
     public static void storeData(ArrayList<User> users) {
         try {
-            FileWriter fw = new FileWriter("userInfo.txt");
-            BufferedWriter bfw = new BufferedWriter(fw);
+            FileWriter fw = new FileWriter("userInfo.txt"); //file writer to write the  file
+            BufferedWriter bfw = new BufferedWriter(fw); //buffer reader to read the file
             for (User user : users) {
                 bfw.write(user.getUserName() + " " + user.getPassword() + " " +
                         user.getUserEmail() + " " + user.isBuyer() + " " +
@@ -298,5 +326,65 @@ public class StoreFront {
         } catch (IOException e) {
             System.out.println("File cannot be written to.");
         }
+    }
+
+    /**
+     * creates the admin account for the site
+     *
+     * @param scan Scanner input for user input
+     * @return the account for the admin
+     */
+    public static User createAdmin(Scanner scan) {
+        String password; //the password for the admin
+        String email; //the email for the admin
+        System.out.println("Creating Admin...");
+        System.out.println("The username for this user will be admin.");
+        System.out.println("Please make a password.");
+        do {
+            password = scan.nextLine();
+            if (password.length() < 5) {
+                System.out.println("Password needs to be 5 characters. Try again.");
+            }
+        } while (password.length() < 5);
+        System.out.println("Enter an email");
+        email = scan.nextLine();
+        System.out.println("Admin is not a buyer or a seller");
+        return new User("admin", password, email);
+    }
+
+    public static int adminInterface(User admin, Scanner scan) {
+        boolean signOut = false; //if the user has signed out
+        int userInput; //the users input
+        while (!signOut) {
+            System.out.println("Enter the number to access your desire feature: ");
+            System.out.println("1) Messages");
+            System.out.println("2) Settings");
+            System.out.println("3) Shutdown website");
+            System.out.println("4) Logout");
+            try {
+                userInput = scan.nextInt();
+                scan.nextLine();
+                switch (userInput) {
+                    case 1:
+                        //implement run calendar
+
+                    case 2:
+                        UserSettings userSettings = new UserSettings(admin);
+                        userSettings.runUserSettings(scan);
+                        break;
+                    case 3:
+                        System.out.println("Shutting down website...");
+                        return 1;
+                    case 4:
+                        System.out.println("Signing out...");
+                        signOut = true;
+                    default:
+                        throw new IllegalArgumentException();
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("The input is not acceptable, please try again.");
+            }
+        }
+        return 0;
     }
 }
