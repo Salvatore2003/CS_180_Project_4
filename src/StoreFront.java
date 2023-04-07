@@ -39,7 +39,7 @@ public class StoreFront {
                     signedInUser = login(users, scan);
                     if (signedInUser != null && !signedInUser.getUserName().equals("admin")) {
                         userInterface(scan, signedInUser, users);
-                    } else {
+                    } else if (signedInUser != null && signedInUser.equals("admin")){
                         adminReturn = adminInterface(signedInUser, scan);
                         if (adminReturn == 1) {
                             siteUp = false;
