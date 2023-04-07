@@ -9,7 +9,7 @@ public class StoreFront {
         ArrayList<User> users; //the users that are stored
         users = recoverUsers();
         int adminReturn;
-        if (users == null || users.size() == 0) {
+        if (users.size() == 0) {
             users = new ArrayList<>();
             users.add(createAdmin(scan));
         }
@@ -37,9 +37,10 @@ public class StoreFront {
                 }
                 case "2" -> {
                     signedInUser = login(users, scan);
+
                     if (signedInUser != null && !signedInUser.getUserName().equals("admin")) {
                         userInterface(scan, signedInUser, users);
-                    } else if (signedInUser != null && signedInUser.equals("admin")){
+                    } else if (signedInUser != null && signedInUser.getUserName().equals("admin")){
                         adminReturn = adminInterface(signedInUser, scan);
                         if (adminReturn == 1) {
                             siteUp = false;
@@ -234,6 +235,7 @@ public class StoreFront {
     public static void userInterface(Scanner scan, User user, ArrayList<User> users) {
         boolean signOut = false; //if the user has signed out
         int userInput; //the users input
+        boolean accountStillUp;
         while (!signOut) {
             System.out.println("Enter the number to access your desire feature: ");
             System.out.println("1) Messages");
@@ -248,7 +250,10 @@ public class StoreFront {
 
                     case 2:
                         UserSettings userSettings = new UserSettings(user, users);
-                        userSettings.runUserSettings(scan);
+                        accountStillUp = userSettings.runUserSettings(scan);
+                        if (!accountStillUp) {
+                            signOut = true;
+                        }
                         break;
                     case 3:
                         System.out.println("Logging out...");

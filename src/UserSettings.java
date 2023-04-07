@@ -19,10 +19,12 @@ public class UserSettings {
      *
      * @param scan Scanner object to take an input
      */
-    public void runUserSettings(Scanner scan) {
+    public boolean runUserSettings(Scanner scan) {
         String userInput = ""; //the users input
-        boolean deletedAccount = false;
-        if (!user.equals("admin")) {
+
+
+        boolean runSettings = true;
+        if (!user.getUserName().equals("admin")) {
             do {
                 System.out.println("Enter a number to change your account info:");
                 System.out.println("1) Username");
@@ -30,7 +32,7 @@ public class UserSettings {
                 System.out.println("3) Email");
                 System.out.println("4) Edit Buyer or Seller");
                 System.out.println("5) Delete Account");
-                System.out.println("5) Exit");
+                System.out.println("6) Exit");
                 userInput = scan.nextLine();
                 switch (userInput) {
                     case "1":
@@ -46,14 +48,18 @@ public class UserSettings {
                         changeBuyerOrSeller(scan);
                         break;
                     case "5":
-                        deletedAccount = deleteAccount(scan);
+                      deleteAccount(scan);
+                      return false;
                     case "6":
                         System.out.println("Exiting...");
                         break;
                     default:
                         System.out.println("Please enter 1, 2, 3, 4, or 5");
                 }
-            } while (!userInput.equals("5") || !userInput.equals("6"));
+                if (userInput.equals("6")) {
+                    runSettings = false;
+                }
+            } while (runSettings);
         } else {
             do {
                 System.out.println("Enter a number to change your account info:");
@@ -74,8 +80,9 @@ public class UserSettings {
                     default:
                         System.out.println("Please enter 1, 2, or 3");
                 }
-            } while (!userInput.equals("5"));
+            } while (!userInput.equals("3"));
         }
+        return true;
     }
 
     /**
@@ -209,8 +216,9 @@ public class UserSettings {
     /** deletes a user account
      * @param scan a scanner object to take the input of an objects
      */
-    public boolean deleteAccount(Scanner scan) {
+    public void deleteAccount(Scanner scan) {
         String userInput; //the users input
+        Boolean userDeleted = false;
         System.out.println("Confirm you want to delete your account");
         System.out.println("1) Confirm");
         System.out.println("2) Cancel");
@@ -220,11 +228,15 @@ public class UserSettings {
                 if (users.get(i).getUserName().equals(user.getUserName())) {
                     System.out.println("Deleting account...");
                     users.remove(i);
-                    return true;
+                    userDeleted = true;
                 }
             }
+            StoreFront.storeData(users);
+        } else {
+            System.out.println("Cancelling");
         }
-        System.out.println("Cancelling...");
-        return false;
+        if (userDeleted) {
+            System.out.println("User has been deleted");
+        }
     }
 }
