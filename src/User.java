@@ -13,9 +13,10 @@ public class User {
         this.seller = seller;
     }
 
-    public User (String userName, String password) {
+    public User (String userName, String password, String userEmail) {
         this.userName = userName;
         this.password = password;
+        this.userEmail = userEmail;
     }
 
     /**

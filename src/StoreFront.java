@@ -8,9 +8,12 @@ public class StoreFront {
         Scanner scan = new Scanner(System.in); //scanner object for the input
         ArrayList<User> users; //the users that are stored
         users = recoverUsers();
-        if (users == null) {
+        int adminReturn;
+        if (users.size() == 0) {
             users = new ArrayList<>();
+            users.add(createAdmin(scan));
         }
+
         String userInput; //the users input
         User signedInUser; //the user that is signe in
         boolean siteUp = true; //if the site us currently up
@@ -34,11 +37,15 @@ public class StoreFront {
                 }
                 case "2" -> {
                     signedInUser = login(users, scan);
-                    if (signedInUser != null) {
+                    if (signedInUser != null && !signedInUser.getUserName().equals("admin")) {
                         userInterface(scan, signedInUser, users);
+                    } else {
+                        adminReturn = adminInterface(signedInUser, scan);
+                        if (adminReturn == 1) {
+                            siteUp = false;
+                        }
                     }
                 }
-                case "3" -> siteUp = false;
             }
         }
         storeData(users);
@@ -47,8 +54,9 @@ public class StoreFront {
 
     /**
      * creates a new account for the users
+     *
      * @param users a list of the current users
-     * @param scan a scanner object to take inputs
+     * @param scan  a scanner object to take inputs
      * @return the account that is created
      */
     public static User createAccount(ArrayList<User> users, Scanner scan) {
@@ -162,8 +170,9 @@ public class StoreFront {
 
     /**
      * logs in the user
+     *
      * @param users a list of current users
-     * @param scan a Scanner object to take inputs
+     * @param scan  a Scanner object to take inputs
      * @return the user that is logged in
      */
     //this is how the user logs in
@@ -217,8 +226,9 @@ public class StoreFront {
 
     /**
      * the interface for when the user logs in
-     * @param scan the Scanner object to take inputs
-     * @param user the user that is logged in
+     *
+     * @param scan  the Scanner object to take inputs
+     * @param user  the user that is logged in
      * @param users a list of all other users
      */
     public static void userInterface(Scanner scan, User user, ArrayList<User> users) {
@@ -255,6 +265,7 @@ public class StoreFront {
 
     /**
      * recovers the users from previous times the code was ran
+     *
      * @return the list of users that is stored
      */
     public static ArrayList<User> recoverUsers() {
@@ -298,6 +309,7 @@ public class StoreFront {
 
     /**
      * stores the users so that they can be used again next time the site is up
+     *
      * @param users the users that are previously used
      */
 
@@ -314,5 +326,65 @@ public class StoreFront {
         } catch (IOException e) {
             System.out.println("File cannot be written to.");
         }
+    }
+
+    /**
+     * creates the admin account for the site
+     *
+     * @param scan Scanner input for user input
+     * @return the account for the admin
+     */
+    public static User createAdmin(Scanner scan) {
+        String password; //the password for the admin
+        String email; //the email for the admin
+        System.out.println("Creating Admin...");
+        System.out.println("The username for this user will be admin.");
+        System.out.println("Please make a password.");
+        do {
+            password = scan.nextLine();
+            if (password.length() < 5) {
+                System.out.println("Password needs to be 5 characters. Try again.");
+            }
+        } while (password.length() < 5);
+        System.out.println("Enter an email");
+        email = scan.nextLine();
+        System.out.println("Admin is not a buyer or a seller");
+        return new User("admin", password, email);
+    }
+
+    public static int adminInterface(User admin, Scanner scan) {
+        boolean signOut = false; //if the user has signed out
+        int userInput; //the users input
+        while (!signOut) {
+            System.out.println("Enter the number to access your desire feature: ");
+            System.out.println("1) Messages");
+            System.out.println("2) Settings");
+            System.out.println("3) Shutdown website");
+            System.out.println("4) Logout");
+            try {
+                userInput = scan.nextInt();
+                scan.nextLine();
+                switch (userInput) {
+                    case 1:
+                        //implement run calendar
+
+                    case 2:
+                        UserSettings userSettings = new UserSettings(admin);
+                        userSettings.runUserSettings(scan);
+                        break;
+                    case 3:
+                        System.out.println("Shutting down website...");
+                        return 1;
+                    case 4:
+                        System.out.println("Signing out...");
+                        signOut = true;
+                    default:
+                        throw new IllegalArgumentException();
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("The input is not acceptable, please try again.");
+            }
+        }
+        return 0;
     }
 }

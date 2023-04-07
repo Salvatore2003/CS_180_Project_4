@@ -9,6 +9,9 @@ public class UserSettings {
         this.user = user;
         this.users = users;
     }
+    public UserSettings (User user) {
+        this.user = user;
+    }
 
     /**
      * allows the user to choose what to change
@@ -16,34 +19,57 @@ public class UserSettings {
      */
     public void runUserSettings(Scanner scan) {
         String userInput = ""; //the users input
-        do {
-            System.out.println("Enter a number to change your account info:");
-            System.out.println("1) Username");
-            System.out.println("2) Password");
-            System.out.println("3) Email");
-            System.out.println("4) Edit Buyer or Seller");
-            System.out.println("5) Exit");
-            userInput = scan.nextLine();
-            switch (userInput) {
-                case "1":
-                    setUsername(scan);
-                    break;
-                case "2":
-                    setPassword(scan);
-                    break;
-                case "3":
-                    setEmail(scan);
-                    break;
-                case "4":
-                    changeBuyerOrSeller(scan);
-                    break;
-                case "5":
-                    System.out.println("Exiting...");
-                    break;
-                default:
-                    System.out.println("Please enter 1, 2, 3, 4, or 5");
-            }
-        } while (!userInput.equals("5"));
+        if (!user.equals("admin")) {
+            do {
+                System.out.println("Enter a number to change your account info:");
+                System.out.println("1) Username");
+                System.out.println("2) Password");
+                System.out.println("3) Email");
+                System.out.println("4) Edit Buyer or Seller");
+                System.out.println("5) Exit");
+                userInput = scan.nextLine();
+                switch (userInput) {
+                    case "1":
+                        setUsername(scan);
+                        break;
+                    case "2":
+                        setPassword(scan);
+                        break;
+                    case "3":
+                        setEmail(scan);
+                        break;
+                    case "4":
+                        changeBuyerOrSeller(scan);
+                        break;
+                    case "5":
+                        System.out.println("Exiting...");
+                        break;
+                    default:
+                        System.out.println("Please enter 1, 2, 3, 4, or 5");
+                }
+            } while (!userInput.equals("5"));
+        } else {
+            do {
+                System.out.println("Enter a number to change your account info:");
+                System.out.println("1) Password");
+                System.out.println("2) Email");
+                System.out.println("3) Exit");
+                userInput = scan.nextLine();
+                switch (userInput) {
+                    case "1":
+                        setPassword(scan);
+                        break;
+                    case "2":
+                        setEmail(scan);
+                        break;
+                    case "3":
+                        System.out.println("Exiting...");
+                        break;
+                    default:
+                        System.out.println("Please enter 1, 2, or 3");
+                }
+            } while (!userInput.equals("5"));
+        }
     }
 
     /**
