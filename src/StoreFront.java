@@ -264,7 +264,7 @@ public class StoreFront {
     }
 
     /**
-     * recovers the users from previous times the code was ran
+     * recovers the users from previous times the code was run
      *
      * @return the list of users that is stored
      */
