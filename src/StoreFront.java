@@ -240,13 +240,14 @@ public class StoreFront {
             System.out.println("Enter the number to access your desire feature: ");
             System.out.println("1) Messages");
             System.out.println("2) Settings");
-            System.out.println("3) Logout");
+            System.out.println("3) Marketplace");
+            System.out.println("4) Logout");
             try {
                 userInput = scan.nextInt();
                 scan.nextLine();
                 switch (userInput) {
                     case 1:
-                        //implement run calendar
+                        //implement run messages
 
                     case 2:
                         UserSettings userSettings = new UserSettings(user, users);
@@ -256,6 +257,14 @@ public class StoreFront {
                         }
                         break;
                     case 3:
+                        MarketPlace marketPlace = new MarketPlace(user.getUserName(), user.getUserEmail(), scan);
+                        if (user.isSeller()) {
+                            marketPlace.runSeller();
+
+                        } else {
+                            marketPlace.runCustomer();
+                        }
+                    case 4:
                         System.out.println("Logging out...");
                         signOut = true;
                         break;
