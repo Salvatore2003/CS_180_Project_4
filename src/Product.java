@@ -23,4 +23,28 @@ public class Product {
         this.price = price;
         this.quantitySold = quantitySold;
     }
+
+    public String getProductName(){
+        return productName;
+    }
+
+    public String getStoreName(){
+        return storeName;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public int getQuantityAvailable(){
+        return quantityAvailable;
+    }
+
+    public double getPrice(){
+        return price;
+    }
+
+    public int getQuantitySold(){
+        return quantitySold;
+    }
 }

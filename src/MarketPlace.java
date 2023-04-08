@@ -16,6 +16,10 @@ public class MarketPlace {
         this.scan = scan;
     }
 
+    /**
+     * All basic functions for seller
+     *
+     */
     public void runSeller() {
         ArrayList<Store> stores = new ArrayList<>();
         int userInput = 0;
@@ -24,27 +28,33 @@ public class MarketPlace {
                 System.out.println("Select one of the following:");
                 System.out.println("1) Edit Store");
                 System.out.println("2) Create Store");
-                System.out.println("3) View Sales");
+                System.out.println("3) Delete Store");
                 System.out.println("4) Exit");
                 userInput = scan.nextInt();
 
                 scan.nextLine();
                 if (userInput == 1) {
-                    editStore(stores);
+                    editStore();
                 } else if (userInput == 2) {
                     System.out.println("Please enter the name of the store you want to create");
                     String storeName = scan.nextLine();
                     Store store = new Store(user, storeName);
                     stores.add(store);
-                    System.out.println("Store has been created");
+                    if (createFile(user, storeName)) {
+                        System.out.println("Store has been created");
+                    }
                 } else if (userInput == 3) {
-                    viewSales(stores);
+                    System.out.println("Please enter the name of the store you want to delete");
+                    String storeName = scan.nextLine();
+                    String fileName = user + "_" + storeName;
+                    deleteStore(fileName);
+
                 } else if (userInput == 4) {
 
                 } else {
                     throw new InvalidNumber("Please enter 1, 2, 3, or 4");
                 }
-            }catch (InvalidNumber e) {
+            } catch (InvalidNumber e) {
                 System.out.println(e.getMessage());
             } catch (InputMismatchException e) {
                 System.out.println("Please enter 1, 2, 3, or 4");
@@ -54,18 +64,69 @@ public class MarketPlace {
         } while (!(userInput == 4));
     }
 
-    public void editStore(ArrayList<Store> stores) {
+    /**
+     * Shows customer all products of a shop of his choosing
+     *
+     */
+    public void runCustomer() {
+        System.out.println("Please enter the name of the store you want to access");
+        String storeName = scan.nextLine();
+        String directory = ""; //Directory path must be here
+        File dir = new File(directory);
+        File[] files = dir.listFiles();
+        ArrayList<Product> products = new ArrayList<>();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].getName().contains(storeName)) {
+                    products = readFile(files[i].getName(), storeName);
+                }
+            }
+            for(int i = 0; i < products.size(); i++) {
+                System.out.printf("Product Name: %s \n", products.get(i).getProductName());
+                System.out.printf("Product Description: %s \n", products.get(i).getDescription());
+                System.out.printf("Product Price: %d \n", products.get(i).getPrice());
+                System.out.println("-----------------------");
+            }
+        } else {
+            System.out.println("No such files found in directory.");
+        }
+    }
+
+    /**
+     * Creates a file for a new store
+     *
+     */
+    public boolean createFile(String user, String storeName) {
+        String fileName = user + "_" + storeName;
+        File file = new File(fileName);
+        boolean flag;
+        try {
+            flag = file.createNewFile();
+            if (flag) {
+                System.out.println("File created successfully.");
+            } else {
+                System.out.println("File already exists.");
+                flag = false;
+            }
+        } catch (IOException e) {
+            System.out.println("Error occurred while creating file");
+            flag = false;
+        }
+        return flag;
+    }
+
+    /**
+     * edits a store
+     *
+     */
+    public void editStore() {
         System.out.println("Please enter the name of the store that you would like to edit");
         String storeName = scan.nextLine();
-        Store store1 = new Store();
-        for (int i = 0; i < stores.size(); i++) {
-            if (stores.get(i).getStoreName().equals(storeName)) {
-                store1 = stores.get(i);
-            }
-        }
+        String fileName = user + "_" + storeName;
+        ArrayList<Product> products = new ArrayList<>();
+        products = readFile(fileName, storeName);
 
         int userInput = 0;
-        ArrayList<Product> products = new ArrayList<>();
         do {
             try {
                 System.out.println("Select one of the following:");
@@ -75,50 +136,109 @@ public class MarketPlace {
                 System.out.println("4) Back to Menu");
                 userInput = scan.nextInt();
                 scan.nextLine();
+
                 if (userInput == 1) {
-                    products = takeInput(store1.getStoreName());
-                    for (int i = 0; i < products.size(); i++) {
-                        store1.addProduct(products.get(i));
-                    }
+                    ArrayList<Product> productsAdd = new ArrayList<>();
+                    productsAdd = takeInput(storeName);
+                    products.addAll(productsAdd);
+                    writeFile(fileName, products);
+
                 } else if (userInput == 2) {
                     System.out.println("Please enter the name of the product to be edited");
                     String productName1 = scan.nextLine();
-                    Product product = takeInputEdit(store1.getStoreName());
-                    store1.editProduct(productName1, product);
+                    Product product = takeInputEdit(storeName);
+                    for (int i = 0; i < products.size(); i++) {
+                        if (products.get(i).productName.equals(productName1)) {
+                            products.set(i, product);
+                        }
+                    }
+                    writeFile(fileName, products);
 
                 } else if (userInput == 3) {
                     System.out.println("Please enter the name of the product to be deleted");
                     String productName1 = scan.nextLine();
-                    store1.removeProduct(productName1);
+                    for (int i = 0; i < products.size(); i++) {
+                        if (products.get(i).productName.equals(productName1)) {
+                            products.remove(products.get(i));
+                        }
+                    }
+                    writeFile(fileName, products);    
 
                 } else if (userInput == 4) {
 
                 } else {
                     throw new InvalidNumber("Please enter 1, 2, 3, or 4");
                 }
-            }catch (InvalidNumber e) {
+            } catch (InvalidNumber e) {
                 System.out.println(e.getMessage());
             } catch (InputMismatchException e) {
                 System.out.println("Please enter 1, 2, 3, or 4");
                 scan.nextLine();
             }
         } while (!(userInput == 4));
-
     }
 
-    public void viewSales(ArrayList<Store> stores){
-        for (int i = 0; i < stores.size(); i++) {
-            System.out.println(stores.get(i).getStoreName());
-            System.out.println("------------------");
-            for (int j = 0; i < stores.get(i).productSize(); j++) {
-                System.out.println("Product Name:");
-                System.out.println(stores.get(i).getProducts(j).productName);
-                System.out.println("Quantity Sold:");
-                System.out.println(stores.get(i).getProducts(j).quantitySold);
+    /**
+     * writes changes in a store to the file
+     *
+     */
+    public void writeFile(String fileName, ArrayList<Product> products) {
+        File file = new File(fileName);
+        String infoLine;
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
+            for (int i = 0; i < products.size(); i++) {
+                infoLine = String.format("%s,%s,%s,%d,f,%d", products.get(i).getProductName(),
+                        products.get(i).getStoreName(), products.get(i).getDescription(),
+                        products.get(i).getQuantityAvailable(), products.get(i).getPrice(),
+                        products.get(i).getQuantitySold());
+                bw.write(infoLine);
+                bw.newLine();
             }
+            bw.close();
+        } catch (IOException e) {
+
         }
     }
 
+    /**
+     * reads stored information from file
+     *
+     */
+    public ArrayList<Product> readFile(String fileName, String storeName) {
+        ArrayList<Product> products = new ArrayList<>();
+        String productName;
+        String description;
+        int quantityAvailable;
+        double price;
+        int quantitySold;
+        String[] split;
+        try {
+            File input = new File(fileName);
+            FileReader fr = new FileReader(input);
+            BufferedReader bfr = new BufferedReader(fr);
+            String infoLine = bfr.readLine();
+            while (infoLine != null) {
+                split = infoLine.split(",", 5);
+                productName = split[0];
+                description = split[1];
+                quantityAvailable = Integer.parseInt(split[2]);
+                price = Double.parseDouble(split[3]);
+                quantitySold = Integer.parseInt(split[4]);
+                Product product = new Product(productName, storeName, description, quantityAvailable, price, quantitySold);
+                products.add(product);
+                infoLine = bfr.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    /**
+     * takes input from user for adding products
+     *
+     */
     public ArrayList<Product> takeInput(String storeName) {
         ArrayList<Product> products = new ArrayList<>();
         int userInput = 0;
@@ -178,7 +298,10 @@ public class MarketPlace {
 
         return products;
     }
-
+    /**
+     * takes input from user for just editing products
+     *
+     */
     public Product takeInputEdit(String storeName) {
         String productName;
         String description;
@@ -197,8 +320,46 @@ public class MarketPlace {
         System.out.println("What is the quantity sold of the new Product?");
         quantitySold = scan.nextInt();
         Product product = new Product(productName, storeName, description, quantityAvailable, price, quantitySold);
-
         return product;
 
+    }
+
+    /**
+     * deletes file for the store
+     *
+     */
+    public boolean deleteStore(String fileName) {
+        File file = new File(fileName);
+        boolean flag = file.delete();
+        if (file.exists()) {
+            if (flag) {
+                System.out.println("Store deleted successfully.");
+            } else {
+                System.out.println("Failed to delete Store.");
+            }
+        } else {
+            System.out.println("Store not found.");
+            flag = false;
+        }
+        return flag;
+    }
+
+    /**
+     * deletes all files of the user
+     *
+     */
+    public void deleteUser(String user) {
+        String directory = ""; //Directory path must be here
+        File dir = new File(directory);
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].getName().contains(user)) {
+                    deleteStore(files[i].getName());
+                }
+            }
+        } else {
+            System.out.println("No such files found in directory.");
+        }
     }
 }
