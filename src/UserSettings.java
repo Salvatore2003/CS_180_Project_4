@@ -186,10 +186,8 @@ public class UserSettings {
      * @param scan Scanner object to take an input
      */
     public void changeBuyerOrSeller(Scanner scan) {
-        String changeRole; //checks if the user enters Y or N to change role
         String userInput;
         do {
-            System.out.println(user.isSeller());
             if (user.isSeller()) {
                 System.out.println("Would you like to become a buyer? Enter Y or N");
                 userInput = scan.nextLine();
@@ -197,6 +195,7 @@ public class UserSettings {
                     user.setBuyer(true);
                     user.setSeller(false);
                     System.out.println("Role has been change.");
+                    StoreFront.storeData(users);
                     break;
                 } else if (userInput.equals("N")) {
                     System.out.println("Role is not changed.");
@@ -210,6 +209,8 @@ public class UserSettings {
                 if (userInput.equals("Y")) {
                     user.setBuyer(false);
                     user.setSeller(true);
+                    System.out.println("Role has been changed");
+                    StoreFront.storeData(users);
                     break;
                 } else if (userInput.equals("N")){
                     System.out.println("Role is not changed.");
@@ -220,7 +221,7 @@ public class UserSettings {
             }
 
         } while (true);
-        StoreFront.storeData(users);
+
     }
 
     /** deletes a user account
