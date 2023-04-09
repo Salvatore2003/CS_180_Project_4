@@ -9,9 +9,10 @@ public class StoreFront {
         ArrayList<User> users; //the users that are stored
         users = recoverUsers();
         int adminReturn;
-        if (users.size() == 0) {
+        if (users == null || users.size() == 0) {
             users = new ArrayList<>();
             users.add(createAdmin(scan));
+            storeData(users);
         }
 
         String userInput; //the users input
@@ -31,6 +32,7 @@ public class StoreFront {
                     User newUser = createAccount(users, scan);
                     if (newUser != null) {
                         users.add(newUser);
+                        storeData(users);
                     } else {
                         System.out.println("No user created");
                     }
@@ -207,13 +209,14 @@ public class StoreFront {
                 System.out.println(e.getMessage());
             }
         }
-        System.out.println("Please enter your password.");
+        System.out.println("Please enter your password or exit to leave.");
         while (!validPassword) {
             try {
                 String checkPassword = scan.nextLine();
                 if (checkPassword.equals(users.get(indexOfUser).getPassword())) {
                     return users.get(indexOfUser);
                 } else if (checkPassword.equals("exit")) {
+                    System.out.println("Exiting...");
                     return null;
                 } else {
                     throw new InvalidLogin("Invalid password. Try entering your password again or type exit to leave.");
@@ -248,7 +251,7 @@ public class StoreFront {
                 switch (userInput) {
                     case 1:
                         //implement run messages
-
+                        break;
                     case 2:
                         UserSettings userSettings = new UserSettings(user, users);
                         accountStillUp = userSettings.runUserSettings(scan);
@@ -264,6 +267,7 @@ public class StoreFront {
                         } else {
                             marketPlace.runCustomer();
                         }
+                        break;
                     case 4:
                         System.out.println("Logging out...");
                         signOut = true;
@@ -302,17 +306,15 @@ public class StoreFront {
                 email = line.substring(0, line.indexOf(" "));
                 line = (line.substring(line.indexOf(" ") + 1));
                 isBuyer = Boolean.parseBoolean(line.substring(0, line.indexOf(" ")));
-
-                line = line.substring(0, line.indexOf(" ") + 1);
+                line = line.substring(line.indexOf(" ") + 1);
 
                 isSeller = Boolean.parseBoolean(line);
-
                 users.add(new User(userName, password, email, isBuyer, isSeller));
                 line = bfr.readLine();
             }
             return users;
         } catch (FileNotFoundException e) {
-            System.out.println("No file found.");
+            System.out.println("No users found.");
 
         } catch (Exception e) {
             System.out.println("Error reading the user info file.");

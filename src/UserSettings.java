@@ -22,7 +22,7 @@ public class UserSettings {
     public boolean runUserSettings(Scanner scan) {
         String userInput = ""; //the users input
 
-
+        boolean accountDeleted = false;
         boolean runSettings = true;
         if (!user.getUserName().equals("admin")) {
             do {
@@ -48,8 +48,10 @@ public class UserSettings {
                         changeBuyerOrSeller(scan);
                         break;
                     case "5":
-                      deleteAccount(scan);
-                      return false;
+                      accountDeleted = deleteAccount(scan);
+                      if (accountDeleted) {
+                          return false;
+                      }
                     case "6":
                         System.out.println("Exiting...");
                         break;
@@ -102,7 +104,7 @@ public class UserSettings {
                 System.out.println("Exiting...");
                 break;
             } else if (newUsername.equals(user.getUserName())) {
-                System.out.println("New username is your current username. Change your username or type exit to" +
+                System.out.println("New username is your current username. Change your username or type exit to " +
                         "keep the same username.");
             } else if (newUsername.length() < 5) {
                 System.out.println("Username must be 5 characters long.");
@@ -162,10 +164,13 @@ public class UserSettings {
         String newEmail; //the users new username
         boolean validInput = false; //checks to make sure there is a valid input
         do {
-            System.out.println("Enter your new email");
+            System.out.println("Enter your new email or exit to leave");
             newEmail = scan.nextLine();
             if (newEmail.contains(" ")) {
                 System.out.println("Email cannot contain spaces");
+            }  else if (newEmail.equals("exit")) {
+                validInput = true;
+                System.out.println("Exiting...");
             } else {
                 user.setUserEmail(newEmail);
                 StoreFront.storeData(users);
@@ -182,41 +187,46 @@ public class UserSettings {
      */
     public void changeBuyerOrSeller(Scanner scan) {
         String changeRole; //checks if the user enters Y or N to change role
-        boolean validInput = false; //checks to make sure there is a valid input
+        String userInput;
         do {
-            if (user.isBuyer()) {
-                System.out.println("Would you like to change to being a seller? Enter Y or N.");
-                changeRole = scan.nextLine();
-                if (changeRole.equals("Y")) {
-                    user.setBuyer(false);
-                    user.setSeller(true);
-                    StoreFront.storeData(users);
-                    validInput = true;
-                    System.out.println("Role successfully changed");
-
-                } else {
-                    System.out.println("Please enter Y or N.");
-                }
-            } else {
-                System.out.println("Would you like to change to being a buyer? Enter Y or N.");
-                changeRole = scan.nextLine();
-                if (changeRole.equals("Y")) {
+            System.out.println(user.isSeller());
+            if (user.isSeller()) {
+                System.out.println("Would you like to become a buyer? Enter Y or N");
+                userInput = scan.nextLine();
+                if (userInput.equals("Y")) {
                     user.setBuyer(true);
                     user.setSeller(false);
-                    StoreFront.storeData(users);
-                    validInput = true;
-                    System.out.println("Role successfully changed");
+                    System.out.println("Role has been change.");
+                    break;
+                } else if (userInput.equals("N")) {
+                    System.out.println("Role is not changed.");
+                    break;
                 } else {
-                    System.out.println("Please enter Y or N.");
+                    System.out.println("Please enter Y or N");
+                }
+            }  else if (user.isBuyer()) {
+                System.out.println("Would you like to become a seller? Enter Y or N");
+                userInput = scan.nextLine();
+                if (userInput.equals("Y")) {
+                    user.setBuyer(false);
+                    user.setSeller(true);
+                    break;
+                } else if (userInput.equals("N")){
+                    System.out.println("Role is not changed.");
+                    break;
+                } else {
+                    System.out.println("Please enter Y or N");
                 }
             }
-        } while (!validInput);
+
+        } while (true);
+        StoreFront.storeData(users);
     }
 
     /** deletes a user account
      * @param scan a scanner object to take the input of an objects
      */
-    public void deleteAccount(Scanner scan) {
+    public boolean deleteAccount(Scanner scan) {
         String userInput; //the users input
         Boolean userDeleted = false;
         System.out.println("Confirm you want to delete your account");
@@ -229,14 +239,20 @@ public class UserSettings {
                     System.out.println("Deleting account...");
                     users.remove(i);
                     userDeleted = true;
+
                 }
             }
             StoreFront.storeData(users);
-        } else {
+        } else if (userInput.equals("2")){
             System.out.println("Cancelling");
+            userDeleted = false;
+        } else {
+            System.out.println("Please enter 1 or 2");
         }
         if (userDeleted) {
             System.out.println("User has been deleted");
+            return true;
         }
+        return false;
     }
 }
