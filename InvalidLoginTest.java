@@ -1,16 +1,25 @@
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class InvalidLoginTest {
+public class InvalidLoginTest {
+
     @Test
-    void invalidLoginExceptionTest() {
-        String expectedMessage = "Invalid login exception test";
-        InvalidLogin exception = new InvalidLogin(expectedMessage);
+    public void testInvalidLoginException() {
+        InvalidLogin invalidLogin = new InvalidLogin("Invalid username or password");
 
-        // Check if the exception has the expected message
-        assertEquals(expectedMessage, exception.getMessage());
+        assertNotNull(invalidLogin);
+        assertEquals("Invalid username or password", invalidLogin.getMessage());
+    }
 
-        // Check if the exception is an instance of Exception
-        assertTrue(exception instanceof Exception);
+    @Test
+    public void testInvalidLoginExceptionHandling() {
+        assertThrows(InvalidLogin.class, () -> {
+            throwInvalidLoginException();
+        });
+    }
+
+    private void throwInvalidLoginException() throws InvalidLogin {
+        throw new InvalidLogin("Invalid username or password");
     }
 }
