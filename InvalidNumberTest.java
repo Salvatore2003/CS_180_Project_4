@@ -1,16 +1,25 @@
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class InvalidNumberTest {
+public class InvalidNumberTest {
+
     @Test
-    void invalidNumberExceptionTest() {
-        String expectedMessage = "Invalid number exception test";
-        InvalidNumber exception = new InvalidNumber(expectedMessage);
+    public void testInvalidNumberException() {
+        InvalidNumber invalidNumber = new InvalidNumber("Invalid number input");
 
-        // Check if the exception has the expected message
-        assertEquals(expectedMessage, exception.getMessage());
+        assertNotNull(invalidNumber);
+        assertEquals("Invalid number input", invalidNumber.getMessage());
+    }
 
-        // Check if the exception is an instance of Exception
-        assertTrue(exception instanceof Exception);
+    @Test
+    public void testInvalidNumberExceptionHandling() {
+        assertThrows(InvalidNumber.class, () -> {
+            throwInvalidNumberException();
+        });
+    }
+
+    private void throwInvalidNumberException() throws InvalidNumber {
+        throw new InvalidNumber("Invalid number input");
     }
 }
