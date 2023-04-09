@@ -1,9 +1,12 @@
+import java.util.ArrayList;
+
 public class User {
     private String userName;
     private String password;
     private String userEmail;
     boolean buyer;
     boolean seller;
+    User nameofUser;
 
     public User(String userName, String password, String userEmail, boolean buyer, boolean seller) {
         this.userName = userName;
@@ -97,6 +100,13 @@ public class User {
      */
     public boolean isSeller() {
         return seller;
+    }
+
+    public ArrayList<Message> getInbox() {
+        return null;
+    }
+
+    public void setInbox(ArrayList<Message> recInbox) {
     }
 
 }

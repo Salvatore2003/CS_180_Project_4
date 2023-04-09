@@ -27,7 +27,7 @@ public class StoreFront {
             } while (!userInput.equals("1") && !userInput.equals("2") && !userInput.equals("3"));
 
             switch (userInput) {
-                case "1" -> {
+                case "1" : {
                     User newUser = createAccount(users, scan);
                     if (newUser != null) {
                         users.add(newUser);
@@ -35,7 +35,7 @@ public class StoreFront {
                         System.out.println("No user created");
                     }
                 }
-                case "2" -> {
+                case "2" : {
                     signedInUser = login(users, scan);
 
                     if (signedInUser != null && !signedInUser.getUserName().equals("admin")) {
@@ -99,9 +99,9 @@ public class StoreFront {
                 System.out.println("Exiting...");
                 return null;
             } else if (password.length() < 5) {
-                System.out.println("The password must be 5 character long. Try another or type exit to leave.");
+                System.out.println("The password must be longer than five characters. Try again or type exit to leave.");
             } else if (password.contains(" ")) {
-                System.out.println("Do not use any spaces");
+                System.out.println("Password may not contain any spaces.");
             } else {
                 validInput = true;
             }
@@ -123,16 +123,20 @@ public class StoreFront {
                     userResponse = scan.nextInt();
                     scan.nextLine();
                     switch (userResponse) {
-                        case 1 -> {
+                        case 1 : {
                             System.out.println("Email verified!");
                             validInput = true;
+                            break;
                         }
-                        case 2 -> System.out.println("Enter a different email.");
-                        case 3 -> {
+                        case 2 : {
+                            System.out.println("Enter a different email.");
+                            userEmail = scan.nextLine();
+                    }
+                        case 3 : {
                             System.out.println("Exiting...");
                             return null;
                         }
-                        default -> throw new InputMismatchException();
+                        default : throw new InputMismatchException();
                     }
                 } catch (InputMismatchException e) {
                     System.out.println("Please enter 1, 2, or 3.");
@@ -150,17 +154,17 @@ public class StoreFront {
                 int userInput = scan.nextInt(); //if the user wants to be a buyer or seller. They can also exit
                 scan.nextLine();
                 switch (userInput) {
-                    case 1 -> {
+                    case 1 : {
                         return new User(newUserName, password, userEmail, true, false);
                     }
-                    case 2 -> {
+                    case 2 : {
                         return new User(newUserName, password, userEmail, false, true);
                     }
-                    case 3 -> {
+                    case 3 : {
                         System.out.println("Exiting...");
                         return null;
                     }
-                    default -> throw new InputMismatchException();
+                    default : throw new InputMismatchException();
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Please enter 1, 2, or 3.");
@@ -236,6 +240,10 @@ public class StoreFront {
         boolean signOut = false; //if the user has signed out
         int userInput; //the users input
         boolean accountStillUp;
+        User recepient;
+        int xint = 0;
+        recepient = users.get(xint);
+        ArrayList<Message> inbox = new ArrayList<>();
         while (!signOut) {
             System.out.println("Enter the number to access your desire feature: ");
             System.out.println("1) Messages");
@@ -246,8 +254,65 @@ public class StoreFront {
                 scan.nextLine();
                 switch (userInput) {
                     case 1:
-                        //implement run calendar
-
+                    try {
+                        Messages messages = new Messages(inbox);
+                        String mfeature;
+                        String message;
+                        System.out.println("Choose the messaging feature you would like to access (Type A, B, C, D or E):");
+                        System.out.println("A) View inbox");
+                        System.out.println("B) Send message");
+                        System.out.println("C) Edit message");
+                        System.out.println("D) Delete message");
+                        System.out.println("E) Exit");
+                        mfeature = scan.nextLine();
+                        switch(mfeature) {
+                            case "A":
+                                messages.printInbox();
+                                break;
+                            case "B":
+                                String subject;
+                                User sender = user;
+                                String recipientrequest;
+                                int i = 0;
+                                System.out.println("Enter the username you want to message:");
+                                recipientrequest = scan.nextLine();
+                                while (i < users.size()) {
+                                    if (users.get(i).getUserName().equals(recipientrequest)) {
+                                        recepient = users.get(i);
+                                        break;
+                                    } else {
+                                        i = i+1;
+                                    }   
+                                }  
+                                if (i >= users.size()) { 
+                                    System.out.println("That recipient does not exist!" + i + users.size());
+                                }
+                                if (recepient.getUserName().equals("admin")) {
+                                    System.out.println("You are trying to message the admin");
+                                }
+                                System.out.println("What is the subject of this message?");
+                                subject = scan.nextLine();
+                                System.out.println("Compose your message below:");
+                                message = scan.nextLine();
+                        
+                                messages.sendMessage(subject, message, sender, recepient);
+                                
+                                break;
+                            case "C":
+                                messages.editMessage(null, mfeature, mfeature, user, user);
+                                break;
+                            case "D":
+                                messages.deleteMessage(null, user);
+                                break;
+                            case "E":
+                                System.out.println("Exiting...");
+                                break;
+                            default:
+                                throw new IllegalArgumentException();
+                        }
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("The input is not acceptable, please try again.");
+                    }
                     case 2:
                         UserSettings userSettings = new UserSettings(user, users);
                         accountStillUp = userSettings.runUserSettings(scan);
@@ -348,7 +413,7 @@ public class StoreFront {
         do {
             password = scan.nextLine();
             if (password.length() < 5) {
-                System.out.println("Password needs to be 5 characters. Try again.");
+                System.out.println("Password needs to be greater than 5 characters. Try again.");
             }
         } while (password.length() < 5);
         System.out.println("Enter an email");
@@ -371,7 +436,7 @@ public class StoreFront {
                 scan.nextLine();
                 switch (userInput) {
                     case 1:
-                        //implement run calendar
+                        
 
                     case 2:
                         UserSettings userSettings = new UserSettings(admin);

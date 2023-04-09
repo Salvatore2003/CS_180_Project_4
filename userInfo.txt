@@ -1,1 +1,3 @@
 admin password blamarca false false
+username password email false true
+andyc password email2 true false
