@@ -51,6 +51,7 @@ public class MarketPlace {
                     System.out.println("Please enter the name of the store you want to delete");
                     String storeName = scan.nextLine();
                     String fileName = user + "_" + storeName;
+                    System.out.println(fileName);
                     deleteStore(fileName);
 
                 } else if (userInput == 4) {
@@ -75,20 +76,21 @@ public class MarketPlace {
     public void runCustomer() {
         System.out.println("Please enter the name of the store you want to access");
         String storeName = scan.nextLine();
-        String directory = ""; //Directory path must be here
+        String directory = "./src/"; //Directory path must be here
         File dir = new File(directory);
         File[] files = dir.listFiles();
         ArrayList<Product> products = new ArrayList<>();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
                 if (files[i].getName().contains(storeName)) {
+
                     products = readFile(files[i].getName(), storeName);
                 }
             }
             for(int i = 0; i < products.size(); i++) {
                 System.out.printf("Product Name: %s \n", products.get(i).getProductName());
                 System.out.printf("Product Description: %s \n", products.get(i).getDescription());
-                System.out.printf("Product Price: %d \n", products.get(i).getPrice());
+                System.out.printf("Product Price: %.2f \n", products.get(i).getPrice());
                 System.out.println("-----------------------");
             }
         } else {
@@ -101,8 +103,9 @@ public class MarketPlace {
      *
      */
     public boolean createFile(String user, String storeName) {
+        File dir = new File("./src/");
         String fileName = user + "_" + storeName;
-        File file = new File(fileName);
+        File file = new File(dir, fileName);
         boolean flag;
         try {
             flag = file.createNewFile();
@@ -187,12 +190,14 @@ public class MarketPlace {
      *
      */
     public void writeFile(String fileName, ArrayList<Product> products) {
-        File file = new File(fileName);
+        String directory = "./src/"; //Directory path must be here
+        File dir = new File(directory);
+        File file = new File(dir, fileName);
         String infoLine;
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
             for (int i = 0; i < products.size(); i++) {
-                infoLine = String.format("%s,%s,%s,%d,f,%d", products.get(i).getProductName(),
+                infoLine = String.format("%s,%s,%s,%d,%f,%d", products.get(i).getProductName(),
                         products.get(i).getStoreName(), products.get(i).getDescription(),
                         products.get(i).getQuantityAvailable(), products.get(i).getPrice(),
                         products.get(i).getQuantitySold());
@@ -201,8 +206,9 @@ public class MarketPlace {
             }
             bw.close();
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
+
     }
 
     /**
@@ -217,21 +223,25 @@ public class MarketPlace {
         double price;
         int quantitySold;
         String[] split;
+
         try {
-            File input = new File(fileName);
+            String directory = "./src/"; //Directory path must be here
+            File dir = new File(directory);
+            File input = new File(dir, fileName);
             FileReader fr = new FileReader(input);
             BufferedReader bfr = new BufferedReader(fr);
             String infoLine = bfr.readLine();
             while (infoLine != null) {
-                split = infoLine.split(",", 5);
+                split = infoLine.split(",", 6);
                 productName = split[0];
-                description = split[1];
-                quantityAvailable = Integer.parseInt(split[2]);
-                price = Double.parseDouble(split[3]);
-                quantitySold = Integer.parseInt(split[4]);
+                description = split[2];
+                quantityAvailable = Integer.parseInt(split[3]);
+                price = Double.parseDouble(split[4]);
+                quantitySold = Integer.parseInt(split[5]);
                 Product product = new Product(productName, storeName, description, quantityAvailable, price, quantitySold);
                 products.add(product);
                 infoLine = bfr.readLine();
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -284,12 +294,12 @@ public class MarketPlace {
                     BufferedReader bfr = new BufferedReader(fr);
                     String infoLine = bfr.readLine();
                     while (infoLine != null) {
-                        split = infoLine.split(",", 5);
+                        split = infoLine.split(",", 6);
                         productName = split[0];
-                        description = split[1];
-                        quantityAvailable = Integer.parseInt(split[2]);
-                        price = Double.parseDouble(split[3]);
-                        quantitySold = Integer.parseInt(split[4]);
+                        description = split[2];
+                        quantityAvailable = Integer.parseInt(split[3]);
+                        price = Double.parseDouble(split[4]);
+                        quantitySold = Integer.parseInt(split[5]);
                         Product product = new Product(productName, storeName, description, quantityAvailable, price, quantitySold);
                         products.add(product);
                         infoLine = bfr.readLine();
@@ -333,18 +343,15 @@ public class MarketPlace {
      *
      */
     public boolean deleteStore(String fileName) {
-        File file = new File(fileName);
+        String directory = "./src/"; //Directory path must be here
+        File dir = new File(directory);
+        File file = new File(dir, fileName);
         boolean flag = file.delete();
-        if (file.exists()) {
             if (flag) {
                 System.out.println("Store deleted successfully.");
             } else {
                 System.out.println("Failed to delete Store.");
             }
-        } else {
-            System.out.println("Store not found.");
-            flag = false;
-        }
         return flag;
     }
 
@@ -353,7 +360,7 @@ public class MarketPlace {
      *
      */
     public void deleteUser(String user) {
-        String directory = ""; //Directory path must be here
+        String directory = "./src/"; //Directory path must be here
         File dir = new File(directory);
         File[] files = dir.listFiles();
         if (files != null) {
