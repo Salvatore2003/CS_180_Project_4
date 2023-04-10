@@ -7,3 +7,8 @@ If the user chooses to go to settings then they can edit everything within their
 to completely delete their account. Deleting their account gets rid of their account information, and cannot be logged into again. Once the 
 user edits the settings they will be taken to back to the user interface that allows them to choose to change their settings, messaging, and creating a store.
 Once they are done the user will be able to sign out.
+
+Seller and Consumer Core Functionality
+If the user is a seller, they can choose to create, edit or delete stores. Editing stores give a seller more options including adding products or editing specific products. Products can be added from files or manually and the 
+choice is left to the user. To delete or edit a product in a store, the store name and the product name must be specified.
+If the user is a customer, they can search for the store they would like to see more about. After searching for that store, they can view the products, the product descriptions, and the prices of the products in that store.
