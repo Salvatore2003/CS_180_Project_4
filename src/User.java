@@ -1,4 +1,16 @@
 import java.util.*;
+
+/**
+ * User
+ *
+ * The class that contains the object of user. The program has get and set methods for each variable.
+ * The users are made when an account are created. They can be edited in user setting class.
+ *
+ * @author Bryce LaMarca, Lab 25
+ *
+ * @version 4/10/2023
+ *
+ */
 public class User {
     private String userName;
     private String password;

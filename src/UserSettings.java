@@ -1,6 +1,17 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-
+/**
+ * UserSettings
+ *
+ * This program is where users can change their settings. They can change any of the information attached to
+ * their account in this program. They can also delete their account in the program if they no longer
+ * want to keep their account.
+ *
+ * @author Bryce LaMarca, Lab 25
+ *
+ * @version 4/9/2023
+ *
+ */
 public class UserSettings {
     User user;
     ArrayList<User> users;
@@ -22,8 +33,8 @@ public class UserSettings {
     public boolean runUserSettings(Scanner scan) {
         String userInput = ""; //the users input
 
-        boolean accountDeleted = false;
-        boolean runSettings = true;
+        boolean accountDeleted = false; //if the account is deleted turned true
+        boolean runSettings = true; //if the program should keep running settings
         if (!user.getUserName().equals("admin")) {
             do {
                 System.out.println("Enter a number to change your account info:");
@@ -186,7 +197,7 @@ public class UserSettings {
      * @param scan Scanner object to take an input
      */
     public void changeBuyerOrSeller(Scanner scan) {
-        String userInput;
+        String userInput; //the input that the user enters
         do {
             if (user.isSeller()) {
                 System.out.println("Would you like to become a buyer? Enter Y or N");
@@ -229,36 +240,39 @@ public class UserSettings {
      */
     public boolean deleteAccount(Scanner scan) {
         String userInput; //the users input
-        Boolean userDeleted = false;
-        System.out.println("Confirm you want to delete your account");
-        System.out.println("1) Confirm");
-        System.out.println("2) Cancel");
-        userInput = scan.nextLine();
-        if (userInput.equals("1")) {
-            for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getUserName().equals(user.getUserName())) {
-                    System.out.println("Deleting account...");
-                    users.remove(i);
-                    userDeleted = true;
-                    if(user.isSeller()) {
-                        MarketPlace marketPlace = new MarketPlace(user.getUserName(), user.getUserEmail(), scan);
-                        marketPlace.deleteUser(user.getUserName());
-                    }
+        Boolean userDeleted = false; //whether the user is deleted or not
+        do {
+            System.out.println("Confirm you want to delete your account");
+            System.out.println("1) Confirm");
+            System.out.println("2) Cancel");
+            userInput = scan.nextLine();
+            if (userInput.equals("1")) {
+                for (int i = 0; i < users.size(); i++) {
+                    if (users.get(i).getUserName().equals(user.getUserName())) {
+                        System.out.println("Deleting account...");
+                        users.remove(i);
+                        userDeleted = true;
+                        if (user.isSeller()) {
+                            MarketPlace marketPlace = new MarketPlace(user.getUserName(), user.getUserEmail(), scan);
+                            marketPlace.deleteUser(user.getUserName());
+                        }
 
+                    }
                 }
+
+                StoreFront.storeData(users);
+            } else if (userInput.equals("2")) {
+                System.out.println("Cancelling");
+                userDeleted = false;
+            } else {
+                System.out.println("Please enter 1 or 2");
+            }
+            if (userDeleted) {
+                System.out.println("User has been deleted");
+                return true;
             }
 
-            StoreFront.storeData(users);
-        } else if (userInput.equals("2")){
-            System.out.println("Cancelling");
-            userDeleted = false;
-        } else {
-            System.out.println("Please enter 1 or 2");
-        }
-        if (userDeleted) {
-            System.out.println("User has been deleted");
-            return true;
-        }
+        } while (!userInput.equals("1") && !userInput.equals("2"));
         return false;
     }
 }

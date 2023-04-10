@@ -3,6 +3,20 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * StoreFront
+ *
+ * The storefront contains the main method of the program. Users are able to make accounts and log in.
+ * When making an account a number of prompts are given to successfully make an account. When logged in the user
+ * can go to settings, go to messages, view or make a stores depending on role, and log out. The admin is the first
+ * account made. The admin can shut down the website
+ *
+ * @author Bryce LaMarca, Lab 25
+ *
+ * @version 4/10/2023
+ *
+ */
+
 public class StoreFront {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in); //scanner object for the input
@@ -70,7 +84,7 @@ public class StoreFront {
         String userEmail = ""; //the users email
 
         while (!validInput) {
-            System.out.println("Enter a username:");
+            System.out.println("Enter a username or exit to leave:");
             newUserName = scan.nextLine();
             if (newUserName.equals("exit")) {
                 System.out.println("Exiting...");
@@ -95,7 +109,7 @@ public class StoreFront {
         }
         validInput = false;
         while (!validInput) {
-            System.out.println("Please enter a password:");
+            System.out.println("Please enter a password or exit to leave:");
             password = scan.nextLine();
             if (password.equals("exit")) {
                 System.out.println("Exiting...");
@@ -250,7 +264,8 @@ public class StoreFront {
                 scan.nextLine();
                 switch (userInput) {
                     case 1:
-                        //implement run messages
+                        UserMessages userMessages = new UserMessages(user, users, scan);
+                        userMessages.runMessages();
                         break;
                     case 2:
                         UserSettings userSettings = new UserSettings(user, users);
@@ -373,25 +388,22 @@ public class StoreFront {
         int userInput; //the users input
         while (!signOut) {
             System.out.println("Enter the number to access your desire feature: ");
-            System.out.println("1) Messages");
-            System.out.println("2) Settings");
-            System.out.println("3) Shutdown website");
-            System.out.println("4) Logout");
+            System.out.println("1) Settings");
+            System.out.println("2) Shutdown website");
+            System.out.println("3) Logout");
             try {
                 userInput = scan.nextInt();
                 scan.nextLine();
                 switch (userInput) {
-                    case 1:
-                        //implement run calendar
 
-                    case 2:
+                    case 1:
                         UserSettings userSettings = new UserSettings(admin);
                         userSettings.runUserSettings(scan);
                         break;
-                    case 3:
+                    case 2:
                         System.out.println("Shutting down website...");
                         return 1;
-                    case 4:
+                    case 3:
                         System.out.println("Signing out...");
                         signOut = true;
                     default:
