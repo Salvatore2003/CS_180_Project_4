@@ -240,9 +240,14 @@ public class UserSettings {
                     System.out.println("Deleting account...");
                     users.remove(i);
                     userDeleted = true;
+                    if(user.isSeller()) {
+                        MarketPlace marketPlace = new MarketPlace(user.getUserName(), user.getUserEmail(), scan);
+                        marketPlace.deleteUser(user.getUserName());
+                    }
 
                 }
             }
+
             StoreFront.storeData(users);
         } else if (userInput.equals("2")){
             System.out.println("Cancelling");
