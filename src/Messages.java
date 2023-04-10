@@ -1,3 +1,5 @@
+//Nick made this class and worked on it. He does not know how to push to GitHub so I did it for him
+
 import java.util.*;
 public class Messages{
     ArrayList<Message> inbox;

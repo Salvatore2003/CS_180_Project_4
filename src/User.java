@@ -103,6 +103,7 @@ public class User {
     public boolean isSeller() {
         return seller;
     }
+    //Nick did the parts below this line
 
     public ArrayList<Message> getInbox() { return inbox; }
 
