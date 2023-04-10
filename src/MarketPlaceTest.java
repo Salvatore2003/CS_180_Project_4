@@ -1,142 +1,102 @@
-/**import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import java.nio.file.Path;
+import org.junit.Test;
+import org.junit.Before;
+import static org.junit.Assert.*;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
+public class MarketPlaceTest {
+    private MarketPlace marketPlace;
+    private String user;
+    private String storeName;
+    private String fileName;
+    private Product testProduct;
 
-class MarketPlaceTest {
-    MarketPlace marketPlace = new MarketPlace();
-
-    @Test
-    void testCreateFile(@TempDir Path tempDir) {
-        String user = "testUser";
-        String storeName = "testStore";
-
-        marketPlace.setDirectory(tempDir.toString());
-        assertTrue(marketPlace.createFile(user, storeName));
-        assertTrue(marketPlace.fileExists(user + "_" + storeName));
+    @Before
+    public void setup() {
+        marketPlace = new MarketPlace();
+        user = "testuser";
+        storeName = "teststore";
+        fileName = user + "_" + storeName;
+        testProduct = new Product("testProduct", storeName, "testDescription", 10, 50.0, 5);
     }
 
     @Test
-    void testCreateFile_invalidUserOrStoreName(@TempDir Path tempDir) {
-        String invalidUser = "test/User";
-        String invalidStoreName = "test/Store";
+    public void testCreateFile() {
+        File file = new File(fileName);
 
-        marketPlace.setDirectory(tempDir.toString());
-        assertThrows(IllegalArgumentException.class, () -> marketPlace.createFile(invalidUser, invalidStoreName));
+        // Delete the file if it already exists
+        if (file.exists()) {
+            file.delete();
+        }
+
+        // Test creating a new file
+        boolean result = marketPlace.createFile(user, storeName);
+        assertTrue("File should be created successfully", result);
+        assertTrue("File should exist after creation", file.exists());
+
+        // Test trying to create the same file again
+        result = marketPlace.createFile(user, storeName);
+        assertFalse("File should not be created if it already exists", result);
+        assertTrue("File should still exist after attempting to create again", file.exists());
+
+        // Clean up: delete the test file
+        file.delete();
     }
 
     @Test
-    void testAddItemToFile(@TempDir Path tempDir) {
-        String user = "testUser";
-        String storeName = "testStore";
-        String itemName = "itemName";
-        double price = 10.0;
-        int quantity = 5;
+    public void testWriteAndReadFile() throws IOException {
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(testProduct);
 
-        marketPlace.setDirectory(tempDir.toString());
+        // Create file and write test data
         marketPlace.createFile(user, storeName);
-        assertTrue(marketPlace.addItemToFile(user + "_" + storeName, itemName, price, quantity));
+        marketPlace.writeFile(fileName, products);
 
-        ArrayList<String> expectedContent = new ArrayList<>();
-        expectedContent.add(itemName + "," + price + "," + quantity);
+        // Read data from file
+        ArrayList<Product> readProducts = marketPlace.readFile(fileName, storeName);
 
-        assertEquals(expectedContent, marketPlace.readFile(user + "_" + storeName));
+        // Verify the read data
+        assertEquals("Size of read products list should match written products list", products.size(), readProducts.size());
+        Product readProduct = readProducts.get(0);
+        assertEquals("Product name should match", testProduct.getProductName(), readProduct.getProductName());
+        assertEquals("Product description should match", testProduct.getDescription(), readProduct.getDescription());
+        assertEquals("Product quantity available should match", testProduct.getQuantityAvailable(), readProduct.getQuantityAvailable());
+        assertEquals("Product price should match", testProduct.getPrice(), readProduct.getPrice(), 0.001);
+        assertEquals("Product quantity sold should match", testProduct.getQuantitySold(), readProduct.getQuantitySold());
+
+        // Clean up: delete the test file
+        Files.deleteIfExists(Paths.get(fileName));
     }
 
     @Test
-    void testAddItemToFile_invalidFile(@TempDir Path tempDir) {
-        String fileName = "nonExistentStore";
-        String itemName = "itemName";
-        double price = 10.0;
-        int quantity = 5;
-
-        marketPlace.setDirectory(tempDir.toString());
-        assertFalse(marketPlace.addItemToFile(fileName, itemName, price, quantity));
-    }
-
-    //@Test
-    //void testEditItemInFile(@TempDir Path tempDir) {
-    //    String user = "testUser";
-    //    String storeName = "testStore";
-    //    String itemName = "itemName";
-    //    double price = 10.0;
-    //    int quantity = 5;
-    //    String newDescription = "New description";
-
-    //    marketPlace.setDirectory(tempDir.toString());
-    //    marketPlace.createFile(user, storeName);
-    //    marketPlace.addItemToFile(user + "_" + storeName, itemName, price, quantity);
-
-    //    assertTrue(marketPlace.editItemInFile(user + "_" + storeName, itemName, newDescription, price, quantity));
-
-    //    ArrayList<String> expectedContent = new ArrayList<>();
-    //    expectedContent.add(itemName + "," + newDescription + "," + price + "," + quantity);
-
-    //    assertEquals(expectedContent, marketPlace.readFile(user + "_" + storeName));
-    //}
-    
-    @Test
-    void testEditItemInFile(@TempDir Path tempDir) {
-        String user = "testUser";
-        String storeName = "testStore";
-        String itemName = "itemName";
-        double price = 10.0;
-        int quantity = 5;
-        String newDescription = "New description";
-
-        marketPlace.setDirectory(tempDir.toString());
+    public void testDeleteStore() {
+        // Create a file for the test store
         marketPlace.createFile(user, storeName);
-        marketPlace.addItemToFile(user + "_" + storeName, itemName, price, quantity);
+        File file = new File(fileName);
 
-        assertTrue(marketPlace.editItemInFile(user + "_" + storeName, itemName, newDescription, price, quantity));
-
-        ArrayList<String> expectedContent = new ArrayList<>();
-        expectedContent.add(itemName + "," + newDescription + "," + price + "," + quantity);
-
-        assertEquals(expectedContent, marketPlace.readFile(user + "_" + storeName));
-}
-
-
-    @Test
-    void testEditItemInFile_invalidFile(@TempDir Path tempDir) {
-        String fileName = "nonExistentStore";
-        String itemName = "itemName";
-        double price = 10.0;
-        int quantity = 5;
-        String newDescription = "New description";
-
-        marketPlace.setDirectory(tempDir.toString());
-        assertFalse(marketPlace.editItemInFile(fileName, itemName, newDescription, price, quantity));
+        // Test deleting the store
+        boolean result = marketPlace.deleteStore(fileName);
+        assertTrue("File should be deleted successfully", result);
+        assertFalse("File should not exist after deletion", file.exists());
     }
 
     @Test
-    void testDeleteItemInFile(@TempDir Path tempDir) {
-        String user = "testUser";
-        String storeName = "testStore";
-        String itemName = "itemName";
-        double price = 10.0;
-        int quantity = 5;
+    public void testDeleteUser() {
+        // Create a file for the test user and store
+        marketPlace.createFile(user, storeName);
+        File file = new File(fileName);
 
-       marketPlace.setDirectory(tempDir.toString());
-    marketPlace.createFile(user, storeName);
-    marketPlace.addItemToFile(user + "_" + storeName, itemName, price, quantity);
+        // Verify that the file was created
+        assertTrue("File should exist before deletion", file.exists());
 
-    assertTrue(marketPlace.deleteItemInFile(user + "_" + storeName, itemName));
+        // Test deleting all files of the user
+        marketPlace.deleteUser(user);
 
-    ArrayList<String> expectedContent = new ArrayList<>();
-    assertEquals(expectedContent, marketPlace.readFile(user + "_" + storeName));
+        // Verify that the file was deleted
+        assertFalse("File should not exist after deletion", file.exists());
+    }
 }
 
-    @Test
-    void testDeleteItemInFile_invalidFile(@TempDir Path tempDir) {
-        String fileName = "nonExistentStore";
-        String itemName = "itemName";
-
-        marketPlace.setDirectory(tempDir.toString());
-        assertFalse(marketPlace.deleteItemInFile(fileName, itemName));
-}
-  
-}*/
