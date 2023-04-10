@@ -12,3 +12,6 @@ Seller and Consumer Core Functionality
 If the user is a seller, they can choose to create, edit or delete stores. Editing stores give a seller more options including adding products or editing specific products. Products can be added from files or manually and the 
 choice is left to the user. To delete or edit a product in a store, the store name and the product name must be specified.
 If the user is a customer, they can search for the store they would like to see more about. After searching for that store, they can view the products, the product descriptions, and the prices of the products in that store.
+
+Messaging Functionality
+Users are able to message other users provided they are not of the same type as the other user (Sellers cannot message sellers, etc.) This messaging system implements two boxes, one inbox which contains mail the user has received, and one outbox which contains mail the user has sent. The messaging system allows users to view their inbox, send messages to other users, edit messages they have sent to other users, or delete messages from either their inbox or outbox (This is client side only and does not remove the message from the other user's mailbox.) The messaging UI allows users to select any one of these options, in which they will be prompted to enter information relevant to their choice.
