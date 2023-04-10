@@ -5,6 +5,12 @@ public class Store {
     private String storeName;
     private ArrayList<Product> products;
 
+    /**
+     * It is the object class for a store
+     *
+     * @version 2022-07-25
+     * @author Purdue CS
+     */
     public Store(String user, String storeName) {
         this.user = user;
         this.storeName = storeName;

@@ -6,6 +6,13 @@ public class Product {
     double price;
     int quantitySold;
     //change
+
+    /**
+     * It is the object class for a product
+     *
+     * @version 2022-07-25
+     * @author Purdue CS
+     */
     public Product(String productName, String storeName, String description, int quantityAvailable, double price){
         this.productName = productName;
         this.storeName = storeName;

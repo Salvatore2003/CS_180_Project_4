@@ -1,9 +1,14 @@
 import java.util.ArrayList;
-import java.util.IllformedLocaleException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.*;
 
+/**
+ * Runs the customer and seller marketplace interface
+ *
+ * @version 2022-07-25
+ * @author Purdue CS
+ */
 public class MarketPlace {
     Scanner scan;
     String user;
