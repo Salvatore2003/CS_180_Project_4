@@ -16,6 +16,10 @@ public class MarketPlace {
         this.scan = scan;
     }
 
+    public MarketPlace() {
+
+    }
+
     /**
      * All basic functions for seller
      *
