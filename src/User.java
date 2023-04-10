@@ -1,7 +1,10 @@
+import java.util.*;
 public class User {
     private String userName;
     private String password;
     private String userEmail;
+    private ArrayList<Message> inbox;
+    private ArrayList<Message> outbox;
     boolean buyer;
     boolean seller;
 
@@ -11,6 +14,8 @@ public class User {
         this.userEmail = userEmail;
         this.buyer = buyer;
         this.seller = seller;
+        inbox = new ArrayList<Message>();
+        outbox = new ArrayList<Message>();
     }
 
     public User (String userName, String password, String userEmail) {
@@ -99,5 +104,12 @@ public class User {
         return seller;
     }
 
+    public ArrayList<Message> getInbox() { return inbox; }
+
+    public void setInbox(ArrayList<Message> inbox) { this.inbox = inbox; }
+
+    public ArrayList<Message> getOutbox() { return outbox; }
+
+    public void setOutbox(ArrayList<Message> outbox) { this.outbox = outbox; }
 }
 
