@@ -55,6 +55,10 @@ public class UserMessages {
                     String message = scan.nextLine();
                     m.sendMessage(subject, message, user, recipient);
                 case "2":
+                    if(userInbox.size() == 0) {
+                        System.out.println("You do not have any mail!");
+                        break;
+                    }
                     m.printInbox(user);
                     System.out.println("Which message do you want to read?");
                     userInput = scan.nextLine().toLowerCase();
@@ -67,6 +71,10 @@ public class UserMessages {
                         }
                     }
                 case"3":
+                    if(userInbox.size() == 0) {
+                        System.out.println("You do not have any mail!");
+                        break;
+                    }
                     m.printOutbox(user);
                     System.out.println("Which message do you want to edit?");
                     userInput = scan.nextLine().toLowerCase();
@@ -82,6 +90,10 @@ public class UserMessages {
                     }
                     System.out.println("Message does not exist!");
                 case"4":
+                    if(userInbox.size() == 0) {
+                        System.out.println("You do not have any mail!");
+                        break;
+                    }
                     m.printInbox(user);
                     m.printOutbox(user);
                     System.out.println("Which message would you like to delete?");
