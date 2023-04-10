@@ -57,6 +57,27 @@ class MarketPlaceTest {
         assertFalse(marketPlace.addItemToFile(fileName, itemName, price, quantity));
     }
 
+    //@Test
+    //void testEditItemInFile(@TempDir Path tempDir) {
+    //    String user = "testUser";
+    //    String storeName = "testStore";
+    //    String itemName = "itemName";
+    //    double price = 10.0;
+    //    int quantity = 5;
+    //    String newDescription = "New description";
+
+    //    marketPlace.setDirectory(tempDir.toString());
+    //    marketPlace.createFile(user, storeName);
+    //    marketPlace.addItemToFile(user + "_" + storeName, itemName, price, quantity);
+
+    //    assertTrue(marketPlace.editItemInFile(user + "_" + storeName, itemName, newDescription, price, quantity));
+
+    //    ArrayList<String> expectedContent = new ArrayList<>();
+    //    expectedContent.add(itemName + "," + newDescription + "," + price + "," + quantity);
+
+    //    assertEquals(expectedContent, marketPlace.readFile(user + "_" + storeName));
+    //}
+    
     @Test
     void testEditItemInFile(@TempDir Path tempDir) {
         String user = "testUser";
@@ -76,7 +97,8 @@ class MarketPlaceTest {
         expectedContent.add(itemName + "," + newDescription + "," + price + "," + quantity);
 
         assertEquals(expectedContent, marketPlace.readFile(user + "_" + storeName));
-    }
+}
+
 
     @Test
     void testEditItemInFile_invalidFile(@TempDir Path tempDir) {
