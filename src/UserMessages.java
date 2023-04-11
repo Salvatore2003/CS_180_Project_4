@@ -8,6 +8,7 @@ public class UserMessages {
     public UserMessages(User user, ArrayList<User> users, Scanner scan) {
         this.user = user;
         this.users = users;
+        this.scan = scan;
     }
     /**
      * Case 1: Asks the user for a username they would like to message. Attempts to find a user
@@ -54,6 +55,8 @@ public class UserMessages {
                     System.out.println("Enter the message you would like to send.");
                     String message = scan.nextLine();
                     m.sendMessage(subject, message, user, recipient);
+                    m.updateMessageFile(user, recipient);
+                    break;
                 case "2":
                     if(userInbox.size() == 0) {
                         System.out.println("You do not have any mail!");
@@ -66,18 +69,20 @@ public class UserMessages {
                         if(userInbox.get(i).getSubject().toLowerCase().equals(userInput)) {
                             System.out.println(userInbox.get(i).getSubject());
                             System.out.println(userInbox.get(i).getMessage());
-                            System.out.println("From " + userInbox.get(i).getRecipient());
+                            System.out.println("From " + userInbox.get(i).getRecipient().getUserName());
                             break;
                         }
                     }
-                case"3":
-                    if(userInbox.size() == 0) {
+                    break;
+                case "3":
+                    if(userOutbox.size() == 0) {
                         System.out.println("You do not have any mail!");
                         break;
                     }
                     m.printOutbox(user);
                     System.out.println("Which message do you want to edit?");
                     userInput = scan.nextLine().toLowerCase();
+                    boolean tf = false;
                     for(int i = 0;i < userOutbox.size();i++) {
                         if(userOutbox.get(i).getSubject().toLowerCase().equals(userInput)) {
                             System.out.println("What would you like the new subject to be?");
@@ -85,10 +90,15 @@ public class UserMessages {
                             System.out.println("What would you like the new message to be?");
                             String newMessage = scan.nextLine();
                             m.editMessage(userOutbox.get(i), newSubject, newMessage, userOutbox.get(i).getSender(), userOutbox.get(i).getRecipient());
+                            m.updateMessageFile(user, userOutbox.get(i).getRecipient());
+                            tf = true;
                             break;
                         }
                     }
-                    System.out.println("Message does not exist!");
+                    if(!tf) {
+                        System.out.println("Message does not exist!");
+                    }
+                    break;
                 case"4":
                     if(userInbox.size() == 0) {
                         System.out.println("You do not have any mail!");
@@ -100,18 +110,26 @@ public class UserMessages {
                     userInput = scan.nextLine();
                     for(int i = 0;i < userInbox.size();i++) {
                         if(userInbox.get(i).getSubject().toLowerCase().equals(userInput)) {
+                            User recipient2 = userInbox.get(i).getRecipient();
                             m.deleteMessage(userInbox.get(i), user);
                             System.out.println("Message deleted from inbox.");
+                            m.updateMessageFile(user, recipient2);
                         }
                         if(userOutbox.get(i).getSubject().toLowerCase().equals(userInput)) {
+                            User recipient3 = userInbox.get(i).getRecipient();
                             m.deleteMessage(userOutbox.get(i), user);
                             System.out.println("Message deleted from outbox.");
+                            m.updateMessageFile(user, recipient3);
                         }
                     }
+
+                    break;
+
                 case"5":
                     break;
             }
 
         }while (!userInput.equals("5"));
+
     }
 }
