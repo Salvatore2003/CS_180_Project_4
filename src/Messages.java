@@ -1,5 +1,5 @@
 import java.util.*;
-
+import java.io.*;
 /**
  * Utility class containing all the methods to add, remove, and edit messages as well as a
  * method that prints the inbox and outbox of the user this class is assigned to.
@@ -7,7 +7,7 @@ import java.util.*;
 public class Messages{
     public Messages() {
     }
-    
+
     /**
      * Prints the subjects of the emails in a user's inbox, or prints
      * "Empty Inbox!" if the user's inbox contains no mail
@@ -23,7 +23,7 @@ public class Messages{
             System.out.println(inbox.get(i).getSubject());
         }
     }
-    
+
     public void printOutbox(User user) {
         ArrayList<Message> outbox = user.getOutbox();
         if(outbox.size() == 0) {
@@ -35,9 +35,9 @@ public class Messages{
             System.out.println(outbox.get(i).getSubject());
         }
     }
-    
+
     /**
-     * Sends a message to a recipient's outbox containing a subject and a message, 
+     * Sends a message to a recipient's outbox containing a subject and a message,
      * then adds the same message to the sender's outbox. Does not allow buyers
      * to message buyers or sellers to message sellers.
      */
@@ -50,17 +50,19 @@ public class Messages{
             System.out.println("You cannot message another seller!");
             return;
         }
-        
+
         try {
             ArrayList<Message> recInbox = recipient.getInbox();
             recInbox.add(new Message(subject, message, sender, recipient));
-            recipient.setInbox(recInbox);
-            System.out.println("Message sent successfully.");            
+            ArrayList<Message> senderOutbox = sender.getOutbox();
+            senderOutbox.add(new Message(subject, message, sender, recipient));
+            sender.setOutbox(senderOutbox);
+            System.out.println("Message sent successfully.");
         } catch (Exception e) {
             System.out.println("Error sending message.");
         }
     }
-    
+
     /**
      * Edits a message in both the sender's outbox and the recipient's inbox
      */
@@ -92,7 +94,7 @@ public class Messages{
             return;
         }
     }
-    
+
     /**
      * Deletes a message from the sender's outbox while not deleting it from
      * the recipient's inbox
@@ -108,5 +110,54 @@ public class Messages{
             }
         }
         System.out.println("Message not found.");
+    }
+
+    public void updateMessageFile(User sender, User recipient){
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream(sender.getUserName() + "messages.txt", false));
+            PrintWriter pw2 = new PrintWriter(new FileOutputStream(recipient.getUserName() + "messages.txt", false));
+            ArrayList<Message> senderInbox = sender.getInbox();
+            ArrayList<Message> senderOutbox = sender.getOutbox();
+            ArrayList<Message> recipientInbox = recipient.getInbox();
+            ArrayList<Message> recipientOutbox = recipient.getOutbox();
+            pw.println("INBOX");
+            pw.println();
+            for(int i = 0;i < senderInbox.size();i++) {
+                pw.println("Subject: " + senderInbox.get(i).getSubject());
+                pw.println("Message: " + senderInbox.get(i).getMessage());
+                pw.println("Recipient: " + senderInbox.get(i).getRecipient());
+            }
+            pw.println();
+            pw.println();
+            pw.println();
+            pw.println("OUTBOX");
+            pw.println();
+            for(int i = 0;i < senderOutbox.size();i++) {
+                pw.println("Subject: " + senderOutbox.get(i).getSubject());
+                pw.println("Message: " + senderOutbox.get(i).getMessage());
+                pw.println("Recipient: " + senderOutbox.get(i).getRecipient());
+            }
+            pw2.println("INBOX");
+            pw2.println();
+            for(int i = 0;i < recipientInbox.size();i++) {
+                pw2.println("Subject: " + recipientInbox.get(i).getSubject());
+                pw2.println("Message: " + recipientInbox.get(i).getMessage());
+                pw2.println("Recipient: " + recipientInbox.get(i).getRecipient().getUserName());
+            }
+            pw2.println();
+            pw2.println();
+            pw2.println();
+            pw2.println("OUTBOX");
+            pw2.println();
+            for(int i = 0;i < recipientOutbox.size();i++) {
+                pw2.println("Subject: " + recipientOutbox.get(i).getSubject());
+                pw2.println("Message: " + recipientOutbox.get(i).getMessage());
+                pw2.println("Recipient: " + recipientOutbox.get(i).getRecipient().getUserName());
+            }
+            pw.close();
+            pw2.close();
+        } catch (Exception e) {
+            System.out.println("Error writing to file.");
+        }
     }
 }
